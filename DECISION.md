@@ -76,15 +76,51 @@ Full evidence (per-app installs, reviews, review dates/content, release activity
 
 **Explicitly not done in this phase:** no product selected, no MVP scoped, no winner picked, no 3★-review-driven analysis, no numerical scoring used.
 
+## 0.7 Phase D Output — Pain + Switching Evidence (2026-09-19)
+
+Full evidence (per-quote table: exact quote, app, date, URL, pain category, frequency, severity, workaround, switching language, product-vs-support) is in `RESEARCH.md` under "Phase D — Pain + Switching Evidence". This section records only the phase outcome. **No product or SaaS idea has been selected — this is not a BUILD-track decision.**
+
+**Method:** collected genuine, dated, text-bearing customer statements (not star-only reviews) from multiple competitors per intent — 7–8 statements per intent, ~22 total. One review was excluded from the evidence base because the vendor publicly disputed its authenticity (no matching support record or LinkedIn profile). Ran 3 targeted secondary-source searches (Reddit/G2) for explicit switching language per intent — all three returned zero on-topic results, recorded as absence of additional evidence, not a signal either way.
+
+**Honest headline finding: no intent produced an explicit "switched from X to Y" / "alternative to X" quote.** Per CONTEXT.md §7 ("complaint != willingness to switch"), this means none of the three intents can be marked PASS on the strict switching-evidence bar, regardless of how much other pain evidence exists.
+
+**Verdicts:**
+
+1. `gdpr compliance confluence` — **NEEDS EVIDENCE.** Real, specific pain found — a detailed, dated review describing manual bulk-classification pain across "thousands of individual pages," corroborated by a multi-year vendor feature-request→ship cycle in the same review thread — but zero switching language, and each specific pain point is backed by only one detailed source, not independently repeated across multiple customers.
+2. `confluence page views analytics` — **NEEDS EVIDENCE.** Found switching-from-native evidence (two independent customers, 18 months apart, explicitly say Confluence's own built-in analytics was insufficient and drove them to a paid app) — a real but weaker signal than competitor-to-competitor switching, and it only re-confirms demand already established in Phase C rather than surfacing a new underserved pain. The category's veteran (Viewtracker) is strong and actively investing in new features, narrowing wedge space.
+3. `hubspot integration jira` — **NEEDS EVIDENCE**, with the strongest signal of the three: one review contains explicit comparison-shopping language ("I tested a lot of integration tools to find the right one for us") plus a specific, named feature gap (missing multi-select/date field support). This is the closest to true switching evidence found in the whole research pass, but the associated wedge (deep HubSpot↔Jira field-type sync) carries a **HIGH support-trap rating** — integration/API apps are structurally prone to customer-specific configuration work and breakage from a third-party API (HubSpot) outside the developer's control, which is a direct Solo Gate concern (CONTEXT.md §10).
+
+**Deliberately not concluded:** "more negative reviews" was not treated as "better opportunity" — the intent with the most positive reviews (HubSpot integration) produced the strongest switching signal, not the intent with the most complaints; this is called out explicitly in RESEARCH.md as a deliberate rejection of that naive heuristic. Competitor weakness (reliability bugs, missing features) was not treated as proof of demand.
+
+**Maximum 2 pain/wedge hypotheses carried forward, per instruction:**
+
+**Hypothesis 1 — GDPR/Confluence: narrow bulk/default PII-classification tool for large legacy Confluence spaces**
+- Problem → admins of large/old Confluence instances cannot bulk- or default-classify pages by data sensitivity; manual classification of "thousands of individual pages" is described as "very painful."
+- Evidence → 1 detailed, dated review (Compliance for Confluence, Feb 7 2022) + a confirmed multi-year vendor feature-request→ship cycle in the same thread — moderate, single-sourced.
+- Switching signal → none found; only sustained frustration until the incumbent eventually shipped the feature.
+- Minimal wedge → a narrow Forge app doing bulk PII scan-and-classify with CQL-style scoping, not a full DLP suite.
+- Support risk → MEDIUM (bulk content actions need confirm/rollback UX to avoid "you broke my labels" tickets).
+- Platform/API risk → LOW–MEDIUM (Confluence REST/Forge content search & labeling; specific limits not independently verified — NEEDS EVIDENCE).
+
+**Hypothesis 2 — HubSpot↔Jira: reliable sync with full field-type support**
+- Problem → existing HubSpot-Jira connectors don't support some field types (multi-select, date), forcing customers into manual workarounds or continued comparison-shopping across tools.
+- Evidence → 1 detailed review with explicit comparison-shopping language (Getint, Oct 23 2024) — the strongest signal found in all of Phase D, but single-sourced.
+- Switching signal → comparison-shopping language ("tested a lot of integration tools to find the right one for us") — the closest to true switching evidence in the whole corpus, though not a full "switched from X."
+- Minimal wedge → correct, complete field-type mapping (multi-select, date, etc.) with no workaround required.
+- Support risk → HIGH — integration apps systematically generate customer-specific configuration requests and depend on an external API (HubSpot) outside the developer's control; a direct Solo Gate concern.
+- Platform/API risk → MEDIUM–HIGH — dual dependency on both HubSpot's API and Jira/Forge APIs, not just one.
+
+**Explicitly not done in this phase:** no product selected, no MVP designed, no numerical scoring used, no intent marked PASS based on complaint volume, no competitor weakness treated as proof of our own demand.
+
 ## 1. Target
 
 **Marketplace:** Atlassian Marketplace (selected for Phase B deep research — see Section 0; not yet a BUILD target)
 
-**Exact customer query / intent:** narrowed to 3 candidates in Phase C (see Section 0.6): `gdpr compliance confluence`, `confluence page views analytics`, `hubspot integration jira` — not yet narrowed to one; Phase D (Pain + Switching) is next
+**Exact customer query / intent:** narrowed to 3 candidates in Phase C (see Section 0.6): `gdpr compliance confluence`, `confluence page views analytics`, `hubspot integration jira`. Phase D (see Section 0.7) narrowed further to 2 specific pain/wedge hypotheses (bulk PII classification for GDPR/Confluence; reliable field-type sync for HubSpot↔Jira) — neither yet confirmed via Phase E (wedge) or selected as a product.
 
-**Candidate product:** not yet researched — Phase C/D
+**Candidate product:** not chosen — 2 pain/wedge hypotheses under consideration (see Section 0.7), no product selected
 
-**One-sentence wedge:** not yet researched — Phase E
+**One-sentence wedge:** not yet confirmed — Phase E
 
 ## 2. Hard Gates
 
@@ -96,11 +132,11 @@ Full evidence (per-app installs, reviews, review dates/content, release activity
 | Company-email requirement (Paid via Atlassian) | UNKNOWN — CHECK PENDING | Atlassian requires a company-domain email for Paid-via-Atlassian apps (personal/generic domains not permitted). User's Gewerbe registration is a separate fact from having a company-domain email; not yet verified. RESEARCH.md A3 |
 | Keyword opportunity | PARTIALLY EVIDENCED | 5 of 22 tested search intents classified PROMISING (or PROMISING-on-visibility); majority (16/22) are WEAK/REJECT/saturated-by-veterans. RESEARCH.md → Phase B1 |
 | Demand validation (3 of 5 narrowed intents) | PARTIALLY EVIDENCED | 3 of 5 Phase B1 intents show real, dated, non-generic customer evidence (production use / regulatory outcomes / multi-year retention) at app level; 2 of 5 (`user access review`, `audit log confluence`) demoted to NEEDS EVIDENCE after app-level scrutiny — low competition alone was not treated as proof of demand. RESEARCH.md → Phase C |
-| Repeated pain | UNKNOWN | |
-| Switching signal | UNKNOWN — some switching language surfaced incidentally in Phase C reviews (e.g. Multiplier vs. IdP alternatives) but not yet systematically researched | |
-| Clear wedge | UNKNOWN | |
-| Solo feasibility | UNKNOWN | |
-| Support burden | UNKNOWN | |
+| Repeated pain | PARTIALLY EVIDENCED | Specific, dated pain found for 2 of 3 Phase C intents (bulk PII-classification gap in GDPR/Confluence; missing field-type support in HubSpot↔Jira sync) — but each is backed by only 1 detailed source, not independently repeated across multiple customers. RESEARCH.md → Phase D |
+| Switching signal | NOT FOUND — explicit "switched from X" / "alternative to X" language absent across all 3 intents (22 statements reviewed); closest signal is comparison-shopping language in the HubSpot intent and switching-from-native-tooling in the analytics intent — both weaker than the CONTEXT.md §7 bar. RESEARCH.md → Phase D | |
+| Clear wedge | UNKNOWN — 2 candidate hypotheses identified, neither yet tested in Phase E | RESEARCH.md → Phase D |
+| Solo feasibility | AT RISK for HubSpot↔Jira hypothesis | HIGH support-trap rating assigned — integration/API apps are structurally prone to customer-specific configuration and third-party API breakage, a direct CONTEXT.md §10 veto concern. RESEARCH.md → Phase D |
+| Support burden | MEDIUM (GDPR bulk-classification hypothesis) / HIGH (HubSpot field-sync hypothesis) | RESEARCH.md → Phase D |
 | Native replacement risk | UNKNOWN | |
 | Policy/API risk | UNKNOWN | |
 | Dependency risk | UNKNOWN | |
@@ -172,4 +208,4 @@ Choose exactly one:
 
 **Decision:** `NEEDS EVIDENCE`
 
-**Reason:** Phase A (marketplace screening) and Phase B0 (cold-start validation) are complete — Atlassian Marketplace is selected (see Section 0). Phase B1 (search landscape) is complete — 5 candidate search intents selected (see Section 0.5). Phase C (demand validation) is complete — 3 of those 5 intents (`gdpr compliance confluence`, `confluence page views analytics`, `hubspot integration jira`) show real app-level demand evidence and carry forward to Phase D; the other 2 were demoted to NEEDS EVIDENCE after app-level scrutiny (see Section 0.6). No product has been chosen. No BUILD decision may be made until pain/switching evidence (Phase D) and a concrete wedge (Phase E) are established for one specific candidate product on Atlassian Marketplace.
+**Reason:** Phase A (marketplace screening) and Phase B0 (cold-start validation) are complete — Atlassian Marketplace is selected (see Section 0). Phase B1 (search landscape) is complete — 5 candidate search intents selected (see Section 0.5). Phase C (demand validation) is complete — 3 of those 5 intents carried forward (see Section 0.6). Phase D (pain + switching) is complete — no intent produced explicit switching evidence, but 2 specific pain/wedge hypotheses were identified for further work: bulk PII-classification for GDPR/Confluence (MEDIUM support risk, no switching signal found) and reliable field-type sync for HubSpot↔Jira (strongest comparison-shopping signal found, but HIGH support-trap risk that directly threatens Solo Gate feasibility) — see Section 0.7. No product has been chosen. No BUILD decision may be made until a concrete wedge (Phase E) is established and the HIGH support-trap risk on the HubSpot hypothesis is either resolved or that hypothesis is dropped.

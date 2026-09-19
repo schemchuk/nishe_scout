@@ -440,6 +440,165 @@ Classified against the four B1 criteria: (1) real marketplace demand, (2) paid a
 
 3 з 5 intent переходять до Phase D (Pain + Switching): **gdpr compliance confluence, confluence page views analytics, hubspot integration jira**. Це в межах ліміту "максимум 3", встановленого завданням. Жоден продукт ще не обрано.
 
+### Phase D — Pain + Switching Evidence (executed 2026-09-19)
+
+**Методологія:** для кожного з 3 intent зібрано genuine customer statements з reviews tabs кількох конкурентів (ті самі + додаткові апп, не досліджені в Phase C, для ширшого охоплення). Джерело — тільки реальний текст відгуків з датою; відгуки без тексту (тільки зірки) не рахуються як "statement" і не включені в таблиці. Один відгук (Daniela Ackermann на Getint app) виключено з доказової бази — вендор публічно засумнівався в його автентичності (немає запису звернень до підтримки, немає відповідного LinkedIn-профілю) — трактується як unverified, не як факт. Додатково виконано 3 targeted web-пошуки (Reddit/G2) на explicit switching-мову для кожного intent — результати не дали жодного релевантного on-topic влучення (тільки шум/незв'язані теми); це зафіксовано як відсутність додаткових доказів, не як позитивний чи негативний сигнал.
+
+---
+
+**1. `gdpr compliance confluence`**
+
+| # | Quote | App | Date | Category | Frequency | Severity | Workaround | Switching language | Product vs support |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | "App doesn't load in the cloud, literally just sits there. App is not responding. Wait or cancel?" | Data Protection Toolkit (Actonic) | Aug 22, 2025 | Reliability | Persistent (за словами автора) | HIGH — app непридатний | Немає | Немає | Product issue |
+| 2 | "This app is causing many issues in the Confluence Cloud, and we have been waiting for a new release for a long time. ...impact on PDF export time, which takes over 100 seconds instead of 10 seconds. After the PDF export, a new page is generated with an error stating that the app is still loading" | Data Protection Toolkit (Actonic) | Jan 21, 2025 | Performance + Reliability | Щоразу при PDF export (систематично) | HIGH — 10x сповільнення + помилка | Немає | Немає (лише фрустрація "waiting... for a long time") | Product issue (вендор пізніше підтвердив фікс) |
+| 3 | "This is a great tool, we got an official approval from our data protection department, which certify that our atlassian tools are now fully compliant." | Data Protection Toolkit (Actonic) | Jun 23, 2020 | Compliance (позитивний outcome) | — | — | — | — | Підтверджує реальний job-to-be-done (пройти внутрішній compliance-аудит) |
+| 4 | "Really solid app... made it much easier for us to manage data governance across our Confluence spaces. Simple to set up and works seamlessly." | Compliance for Confluence (AppFox) | Feb 24, 2026 | Reporting/Visibility | — | — | — | — | Позитив, підтверджує value prop |
+| 5 | "There seems to be no way to set a default classification for all pages, and no way to bulk-set classifications, and no inheritance of classifications. This makes this very painful to go through and manually apply a classification for thousands of individual pages." | Compliance for Confluence (AppFox) | Feb 7, 2022 | Missing feature / Workflow friction | Повторювано (кожна нова/існуюча сторінка) | HIGH — ручна праця на "тисячах сторінок" | Немає на момент відгуку | Немає явного "switch", але сильне незадоволення | Product issue — вендор пізніше (той самий review thread, "Update") підтвердив: bulk classification і default classification таки додані |
+| 6 | "The setup does take some time, but nothing an experienced Atlassian administrator can't handle." | SoftComply Validation | Sep 19, 2023 | Workflow friction (мінорна) | Одноразово (setup) | LOW | Досвідчений адмін вирішує сам | Немає | Product characteristic, не критичний issue |
+| 7 | "Using automated validation means we don't need to spend resource time on manually testing and keeping our Jira and Confluence tools in a validated state." | SoftComply Validation | Apr 27, 2023 | Workflow friction (позитивний outcome) | — | — | — | — | Підтверджує: автоматизація ручної compliance-праці — реальна цінність, за яку платять |
+
+**Джерела (URL, дата перевірки 2026-09-19):**
+- https://marketplace.atlassian.com/apps/1219041/data-protection-toolkit-gdpr-pii-dlp-for-confluence?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/1218474/compliance-for-confluence-dlp-classification-detection?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/1229288/softcomply-validation-for-confluence-medtech-compliance?hosting=cloud&tab=reviews
+
+**Повторювані проблеми:** (a) reliability/performance-баги, що ламають плановий, регулярний процес (PDF export) — 2 незалежні згадки в одному й тому ж app (Data Protection Toolkit); (b) відсутність bulk/default-операцій для класифікації великої кількості сторінок (1 детальний відгук, але підтверджений довгим vendor-response циклом, що натякає на ширшу проблему, ніж один клієнт).
+
+**Switching evidence:** Явної "switched from" / "alternative to" / "migrate" мови в жодному з 7 statements НЕ знайдено. Найсильніший непрямий сигнал — фрустрація і "waiting for a new release for a long time" (statement #2), що є попередником switching, але не самим switching. Web-пошук (Reddit/G2) на explicit switching-мову для цього intent — нуль релевантних результатів.
+
+**WEDGE TEST — "bulk/default PII-класифікація для великих legacy-просторів" (з statement #5):**
+1. Вирішується однією вузькою функцією? — Так, потенційно: bulk-scan-and-classify з CQL-подібним скоупінгом.
+2. Потрібна важка інтеграція? — Ні, тільки Confluence REST/Forge API.
+3. Потрібна ручна робота? — Мінімальна з боку розробника; ризик ручної роботи з боку клієнта (масові bulk-дії на контенті вимагають обережного UX із підтвердженням/rollback).
+4. Потрібна зовнішня інфраструктура? — Ні, судячи з наявних даних.
+5. Чи Forge-first? — Так, ймовірно.
+6. Великий support burden? — Помірний ризик (масові зміни контенту — джерело скарг при помилковій класифікації).
+
+**SUPPORT TRAP:** MEDIUM — bulk-операції на клієнтському контенті мають реальний ризик "зіпсували мої дані/розмітку", що вимагає retry/audit-trail функціоналу, а це вже не тривіальний self-serve UX.
+
+**Verdict: NEEDS EVIDENCE.** Реальний, конкретний pain є (bulk-класифікація; reliability на PDF export), але (a) жодного explicit switching-сигналу не знайдено, (b) кожна конкретна проблема підтверджена лише 1 детальним джерелом (не "повторюваністю" у строгому сенсі — кілька незалежних клієнтів з тим самим specific complaint). Це не REJECT (проблема реальна й вирішувана), але й не PASS за критерієм "вузький, повторюваний, потенційно switchable pain."
+
+---
+
+**2. `confluence page views analytics`**
+
+| # | Quote | App | Date | Category | Frequency | Severity | Workaround | Switching language | Product vs support |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | "...has been installed in our org for the past two years... As a Premium Confluence subscriber, Page View Analytics for Confluence Cloud is a great compliment to the Space Level analytics that we have access to..." | view26 | Aug 1, 2022 | Reporting/Visibility | — | — | — | **Switching-from-native**: явно каже, що вбудована (Premium) аналітика Confluence недостатня сама по собі | Підтверджує core value prop |
+| 2 | "A very useful app to track traffic and users for your Confluence. Helps a lot in understanding how to improve public spaces/pages." | Google Analytics for Confluence (Capable) | Nov 15, 2022 | Reporting/Visibility | — | — | — | Немає | Позитив |
+| 3 | "show a connecting error in every pdf. we try to deactivate but they arent a butbton for that. so we cant send this week all our weekly reports. very bad!" | Google Analytics in Confluence (David Simpson Apps) | Sep 6, 2024 | Reliability | Щоразу при PDF export (систематично) | HIGH — заблокувало щотижневу звітність | Спроба деактивації не вдалась (немає кнопки) | Немає явного "switch", але сильне незадоволення ("very bad!") | Product issue |
+| 4 | "We were using Confluence at work for a client facing application and needed to pull some analytics for management. The 'out of the box' solution wasn't giving us the exact results we wanted, so we reached out to David for assistance." | Google Analytics in Confluence (David Simpson Apps) | Apr 9, 2024 | Reporting/Visibility | — | — | — | **Switching-from-native**: явно каже, що вбудоване рішення Confluence не влаштувало | Product issue (gap), закрито custom-допомогою вендора |
+| 5 | "Works perfectly and helps us analyze our users main interests. Support is super fast." | Viewtracker (Elevatic) | Mar 4, 2025 | Reporting/Visibility | — | — | — | Немає | Позитив |
+| 6 | "Have been using Viewtracker since 2012... Migrating our view data from Server to Cloud worked like a charm... team constantly adds new reports and capabilities." | Viewtracker (Elevatic) | Sep 17, 2024 | Migration (позитивний outcome) | — | — | — | Немає | 13-річне утримання клієнта; підтверджує успішну Server→Cloud міграцію без проблем |
+| 7 | "...automates content lifecycle tasks like archiving outdated pages and sending review reminders, which saves us a lot of manual effort." | Better Content Archiving and Analytics (Midori) | Mar 17, 2026 | Workflow friction (позитивний outcome) | — | — | — | Немає | Підтверджує: автоматизація ручного content governance — цінність, за яку платять |
+| 8 | "keeping outdated content under control is no trivial task... For me, this tool belongs as a standard plugin in every larger Confluence instance." | Better Content Archiving and Analytics (Midori) | Dec 11, 2025 | Reporting/Visibility + Workflow friction | Структурна (постійна проблема) | — | — | Немає | Підтверджує структурний, повторюваний job-to-be-done |
+
+**Джерела (URL, дата перевірки 2026-09-19):**
+- https://marketplace.atlassian.com/apps/1218023/view26-page-view-analytics-for-confluence-cloud?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/1216514/google-analytics-for-confluence-page-view-tracker-reports?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/1216936/google-analytics-in-confluence?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/28637/viewtracker-analytics-for-confluence?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/123/better-content-archiving-and-analytics-for-confluence?hosting=cloud&tab=reviews
+
+**Повторювані проблеми:** (a) вбудована Confluence-аналітика ("Space Level"/"out of the box") недостатня — підтверджено 2 незалежними клієнтами різних app (view26, David Simpson Apps), з різницею ~18 місяців; це і є причина, чому весь цей платний niche взагалі існує — але це вже підтверджений (Phase C) загальний попит, а не новий, невирішений під-pain; (b) PDF-export reliability баг — та сама специфічна проблема категорії "export", що й у GDPR-інтенті (statement #3 тут vs. statement #2 в gdpr-таблиці), в двох повністю незалежних apps і vendors.
+
+**Switching evidence:** Немає жодного explicit "switched from [конкурент]" quote. Є два **switching-from-native** сигнали (statements #1, #4) — клієнти явно перейшли від вбудованого Confluence-рішення до платного app, а не з одного платного конкурента на інший. Це реальний, але слабший тип switching-доказу, ніж той, що вимагає CONTEXT.md (Section 7 "Pain Gate": "alternative to X" / "switched from X"). Web-пошук (Reddit/G2) — нуль релевантних результатів.
+
+**WEDGE TEST — "надійний, простий export/reporting, без reliability-багів, що ламають плановану звітність":**
+1. Вирішується однією вузькою функцією? — Частково: сам "надійний export" — це якість виконання, не унікальна фіча; важко зробити з цього самостійний продукт (не можна "полагодити" export чужого конкурента ззовні).
+2. Потрібна важка інтеграція? — Ні.
+3. Потрібна ручна робота? — Ні.
+4. Потрібна зовнішня інфраструктура? — Ні.
+5. Чи Forge-first? — Так.
+6. Великий support burden? — Помірний (аналітичні apps типово генерують "чому цифри не збігаються" тікети — це логічний висновок, не підтверджений прямим доказом у цій вибірці).
+
+**SUPPORT TRAP:** MEDIUM (за аналогією з категорією — не підтверджено прямим доказом саме тут).
+
+**Verdict: NEEDS EVIDENCE.** Є switching-from-native доказ (сильніший за просто негативний review, за правилом CONTEXT.md §7), але це вже відомий (з Phase C) загальний попит, а не новий under-served під-pain. Немає жодного competitor-to-competitor switching-сигналу. Ринок уже добре обслуговується зрілим лідером (Viewtracker, безперервний розвиток), що звужує простір для wedge.
+
+---
+
+**3. `hubspot integration jira`**
+
+| # | Quote | App | Date | Category | Frequency | Severity | Workaround | Switching language | Product vs support |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | "Best HS integration yet. Had a small issue with searching for a match when using custom field, reported to dev team and a few days later they had implemented improved search matching functionality." | HubSpot CRM Integration (Appsvio) | Dec 15, 2025 | Missing feature / Workflow friction | Одноразово, швидко вирішено | LOW (вирішено за кілька днів) | Немає (вирішено vendor'ом) | **Порівняльна мова**: "Best... yet" імплікує досвід з іншими HubSpot-Jira інтеграціями | Product issue, швидко закрито |
+| 2 | "In the midst of migrating from Freshdesk to Jira Service Management (JSM) coupled with HubSpot, finding an app that could integrate these platforms effectively was paramount... It promises to provide read-only data visibility on Jira tickets, and it does exactly that." | HubSpot CRM Integration (Appsvio) | Nov 16, 2023 | Migration / Integration-API | — | — | — | Контекст реальної production-міграції (Freshdesk→JSM), явний процес вибору серед варіантів | Підтверджує реальний, дорогий production use case |
+| 3 | "Never worked right. Company info from Hubspot would not load, which really was the primary reason for installing it." | HubSpot CRM Integration (Appsvio) | Apr 3, 2023 | Reliability | Постійно (за словами автора) | HIGH — головна причина встановлення не спрацювала | Немає | Немає явного, але сильне незадоволення | Product issue, не support incident |
+| 4 | "I tested a lot of integration tools to find the right one for us. Ultimately, this tool didn't support multi-select fields (of which we have many)... It didn't support date fields, but we found a workaround that made it work for us by converting the dates to a string and transferring the string." | HubSpot Integration for Jira FORGE (Getint) | Oct 23, 2024 | Missing feature (integration/API) | Структурна (типи полів завжди відсутні) | MEDIUM — обійдено через workaround | Так: конвертація дат у рядок | **Найсильніший знайдений сигнал**: explicit comparison-shopping "tested a lot of integration tools to find the right one for us" | Product gap, залишились попри нього через простоту налаштування |
+| 5 | "Helps synchronize products and eliminate manual copying info from one system to another." | HubSpot Integration for Jira FORGE (Getint) | Apr 16, 2024 | Workflow friction (позитивний outcome) | — | — | — | Немає | Підтверджує core job-to-be-done (усунення ручного copy-paste) |
+| 6 | "Keine Möglichkeit zum konfigurieren. Es kommt eine 500 im Netzwerktab und im Manage Apps klappt es nicht auf, andere Plugins laufen Reibungslos." (укр.: "Немає можливості налаштувати. З'являється 500 помилка в мережевій вкладці, і в Manage Apps воно не відкривається, інші плагіни працюють без проблем.") | HubSpot CRM for Jira (resolution) | Apr 22, 2025 | Reliability / Installation | Постійно (за словами автора) | HIGH — блокує будь-яке використання | Немає | Немає | Product issue (вендор каже, що жоден інший клієнт про це не повідомляв — можливо, environment-specific, але для цього клієнта це реальний product failure, не просто "як користуватись" питання) |
+| 7 | "This has been one of the easiest integrations I've worked with... covers everything we need without unnecessary complexity." | HubSpot CRM for Jira (resolution) | Apr 15, 2026 | Reporting/Visibility (позитив) | — | — | — | **Порівняльна мова**: "easiest... I've worked with" імплікує досвід з іншими | Позитив |
+
+*Виключено з доказової бази:* відгук "Daniela Ackermann" на Getint app (Feb 19, 2025) — вендор публічно засумнівався в його автентичності (немає записів звернень до підтримки, немає відповідного LinkedIn-профілю). Не використано як факт.
+
+**Джерела (URL, дата перевірки 2026-09-19):**
+- https://marketplace.atlassian.com/apps/1226482/hubspot-crm-integration-for-jira?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/1227969/hubspot-crm-connector-for-jira?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/1231637/hubspot-integration-for-jira-hubspot-connector-forge?hosting=cloud&tab=reviews
+- https://marketplace.atlassian.com/apps/1228240/hubspot-crm-for-jira-report-issue-link-collaboration?hosting=cloud&tab=reviews
+
+**Повторювані проблеми:** (a) неповна підтримка типів полів (multi-select, date) в sync/integration апп — 1 детальний приклад (Getint), типова, але не підтверджена на кількох незалежних апп цього ж intent; (b) reliability/installation-баги, що повністю блокують використання — 2 незалежні приклади (Appsvio "never worked right"; resolution's "500 error, won't open").
+
+**Switching evidence:** Це єдиний з 3 intent із явною **порівняльною/comparison-shopping мовою**: "tested a lot of integration tools to find the right one for us" (Getint, statement #4), плюс два слабші імпліцитні порівняльні сигнали ("Best HS integration yet"; "easiest... I've worked with"). Це підтверджує, що клієнти в цій категорії реально оцінюють кілька варіантів перед вибором — важливий, хоч і не найсильніший за шкалою CONTEXT.md §7 (немає прямого "switched from X to Y"), сигнал switchability. Web-пошук (Reddit/G2) — нуль релевантних результатів.
+
+**WEDGE TEST — "надійна HubSpot↔Jira синхронізація з повною підтримкою типів полів (multi-select, date) без workaround":**
+1. Вирішується однією вузькою функцією? — Так: коректна field-type mapping — вузька, конкретна інженерна задача.
+2. Потрібна важка інтеграція? — Так, за визначенням (HubSpot API + Jira API) — це integration-категорія за своєю природою, отже "важка інтеграція" тут не опціональна, а сама суть продукту.
+3. Потрібна ручна робота? — Ні, з боку розробника після побудови; можливе періодичне обслуговування при змінах HubSpot/Jira API.
+4. Потрібна зовнішня інфраструктура? — Залежить від реалізації (webhook-приймач, якщо не Forge-native).
+5. Чи Forge-first? — Можливо частково (Getint вже має FORGE-версію), але глибока field-mapping синхронізація типово важча в межах Forge-обмежень (NEEDS EVIDENCE — не перевірено окремо).
+6. Великий support burden? — Ризик середній-високий: інтеграційні апп типово генерують customer-specific конфігураційні питання (яке поле на яке мапити), що суперечить Solo Gate/Support Gate вимогам проекту.
+
+**SUPPORT TRAP:** HIGH — інтеграційні (integration/API) апп за своєю природою схильні до customer-specific конфігурації, багів на рівні API третьої сторони (HubSpot) поза контролем розробника, і зламів при змінах зовнішнього API — це системний ризик, а не разовий, і прямо суперечить Solo Gate (CONTEXT.md §10: "складні customer-specific integrations" — явний veto-тригер).
+
+**Verdict: NEEDS EVIDENCE**, з найсильнішим із трьох switching-сигналом (explicit comparison-shopping), але з HIGH support-trap ризиком, що ставить під сумнів solo-feasibility цього wedge ще до Phase E.
+
+---
+
+**Загальний підсумок Phase D:**
+
+| # | Intent | Verdict | Найсильніший знайдений сигнал |
+|---|---|---|---|
+| 1 | gdpr compliance confluence | NEEDS EVIDENCE | Детальний, багаторічно підтверджений feature-gap (bulk classification), але без switching-мови |
+| 2 | confluence page views analytics | NEEDS EVIDENCE | Switching-from-native (2 незалежні клієнти), але не competitor-to-competitor |
+| 3 | hubspot integration jira | NEEDS EVIDENCE | Найсильніша порівняльна/comparison-shopping мова з трьох, але HIGH support-trap для очевидного wedge |
+
+**Важливо:** жоден з трьох intent не дав явного, підручникового "switched from X to Y" quote. Це чесний результат, а не невдача процесу — за інструкцією проекту (CONTEXT.md §7: "complaint != willingness to switch") відсутність цього сигналу не дозволяє класифікувати жоден intent як PASS на цьому етапі. Numeric score не використано; "більше негативних reviews" НЕ трактовано як "краща можливість" (розділ hubspot integration jira має найбільше позитивних відгуків, а не найбільше скарг, і саме там знайдено найсильніший switching-сигнал — це навмисно суперечить наївній евристиці "шукай скарги").
+
+**2 pain/wedge hypotheses, обрані для подальшого дослідження (максимум 2, за інструкцією):**
+
+**Hypothesis 1 — GDPR/Confluence: вузький bulk/default PII-classification інструмент для великих legacy-просторів**
+
+`Problem` → Адміни великих/старих Confluence-інстансів не можуть масово/за замовчуванням класифікувати сторінки за чутливістю даних; ручна класифікація "тисяч окремих сторінок" описана як "very painful."
+
+`Evidence` → 1 детальний, датований відгук (Compliance for Confluence, Feb 7 2022) + підтверджений vendor-response-цикл (той самий thread: функція запитана 2022, реалізована пізніше) — помірна, не масова доказова база.
+
+`Switching signal` → Відсутній (жодного "switched"/"alternative" quote); є лише тривала фрустрація до моменту, поки функцію не додали.
+
+`Minimal wedge` → Вузький Forge-app: сканування + bulk-класифікація PII/labels за CQL-подібним скоупінгом, без повного DLP-функціоналу конкурентів.
+
+`Support risk` → MEDIUM (bulk-дії на клієнтському контенті вимагають UX з підтвердженням/rollback).
+
+`Platform/API risk` → LOW-MEDIUM (Confluence REST/Forge API підтримують content search/labeling; конкретні ліміти не перевірені окремо — NEEDS EVIDENCE).
+
+**Hypothesis 2 — HubSpot↔Jira: надійна синхронізація з повною підтримкою типів полів**
+
+`Problem` → Існуючі HubSpot-Jira конектори не підтримують деякі типи полів (multi-select, date), змушуючи клієнтів або обходити проблему вручну (конвертація дат у рядок), або продовжувати "тестувати багато інтеграційних інструментів."
+
+`Evidence` → 1 детальний відгук з explicit comparison-shopping мовою (Getint, Oct 23 2024) — найсильніший знайдений сигнал у всій Phase D, але одноджерельний.
+
+`Switching signal` → Порівняльна/comparison-shopping мова ("tested a lot of integration tools to find the right one for us") — не повний "switched from X", але найближче до цього з усього зібраного корпусу.
+
+`Minimal wedge` → Коректна, повна field-type mapping (multi-select, date, etc.) без workaround — вузько сформульована технічна перевага.
+
+`Support risk` → HIGH — інтеграційні апп системно генерують customer-specific конфігураційні запити та залежать від змін API третьої сторони (HubSpot), що напряму конфліктує з Solo Gate (CONTEXT.md §10).
+
+`Platform/API risk` → MEDIUM-HIGH — залежність від HubSpot API (зовнішній, поза контролем Atlassian-екосистеми) на додачу до Jira/Forge API; це подвійна залежність, а не одинарна.
+
+**Explicitly not done:** жоден продукт не обрано; MVP не спроєктовано; numeric score не використано; жоден intent не позначено PASS на основі кількості негативних відгуків; слабкість конкурента не інтерпретована як доказ власного попиту.
+
 ## D. Candidate record
 
 Copy this block for each candidate query/wedge.
