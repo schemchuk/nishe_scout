@@ -1,0 +1,25 @@
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local secrets / environment
+.env
+.env.*
+!.env.example
+
+# Generated/build artifacts
+node_modules/
+dist/
+build/
+coverage/
+*.log
+
+# Local research exports
+*.csv
+*.xlsx
+
+# Temporary files
+.tmp/
+tmp/
