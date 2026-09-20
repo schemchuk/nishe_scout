@@ -1261,6 +1261,80 @@ Classified against the four B1 criteria: (1) real marketplace demand, (2) paid a
 
 **Explicitly not done in this phase:** жодного вибору winner за числовим скорингом, жодного коду, жодного MVP, жодної architecture, жодного нового keyword sweep.
 
+## I. Phase J — Competition Gap Validation (executed 2026-09-20)
+
+**Контекст:** користувач відхилив `Confluence Review Cadence Digest` як wedge — `COLLIDED` з уже наявним функціоналом. Problem class (`Confluence stale/outdated content detection & review`) залишається `SURVIVES` (не переглядається). Мета Phase J: чи існує ІНШИЙ реальний unmet job поверх 5 названих apps, а не просто "чого в них немає".
+
+**Критичне корегування Phase I:** повторний, глибший огляд показав, що **Better Content Archiving and Analytics for Confluence (Midori)** — це НЕ маленький суміжний гравець, а **домінантний incumbent**: **1,196 installs, 4.8/5 (155 reviews)**, Platinum Marketplace Partner, Cloud Fortified. У Phase I він фігурував лише як "app, який community рекомендує" — фактичний масштаб був недооцінений. Це саме той app, що вже підтверджено виконує event-triggered/scheduled notifications, ownership-менеджмент, аналітику й archiving — тобто саме той функціонал, що лежав в основі відхиленого "Review Cadence Digest" wedge.
+
+### I1. Уточнений feature-профіль 5 названих apps (перевірено 2026-09-20)
+
+| App | Vendor | Installs/Reviews/Rating | Що реально підтверджено |
+|---|---|---|---|
+| [Better Content Archiving and Analytics for Confluence](https://marketplace.atlassian.com/apps/123/better-content-archiving-and-analytics-for-confluence) | Midori Global Consulting Kft. | **1,196 / 155 / 4.8** (Platinum Partner, Cloud Fortified) | Scheduled/event-triggered email notifications власникам (кастомізовний контент/мова); multi-owner per page; bulk ownership management; auto-archive/delete за end-of-life; аналітика (page views, space usage) на рівні простору; **вже використовується для надсилання alerts department heads** (Phil Sanford review, 2025-04-11: "configure email alerts... send to department heads to ensure all documentation in their space is accurate... this add-on saves us a ton of time through reporting") |
+| [Page Review Manager for Confluence](https://marketplace.atlassian.com/apps/2847619197/page-review-manager-for-confluence) | Bokushi Nagayasu | 0 / 0 (реліз 2026-03-30, v2.0.0) | Review queue (stale/due-soon/current/needs-attention) для ОДНОГО простору за раз; approve/request changes/defer/reassign ownership; **"each action writes an audit entry inside Atlassian"** — audit trail для рішень reviewer'а |
+| [Evergreen — Stale Pages & Content Review for Confluence](https://marketplace.atlassian.com/apps/1279909983/evergreen-stale-pages-content-review-for-confluence) | keelapps | 1 / 0 | Freshness-бейджі (Fresh/Aging/Stale); пороги 90/180 днів, **override per space AND per page** (тобто exceptions вже є); one-click "vouch"/confirm, що **не редагує сторінку і не пінгує watcher**; per-space dashboard, bulk actions до 200 сторінок |
+| [Stale Page Finder for Confluence](https://marketplace.atlassian.com/apps/284465269/stale-page-finder-for-confluence) | MiddleCore | 3 / 0 | Чисте виявлення + CSV export + bulk labeling + "Request Review from Page Owners" через labels. Жодного notification/escalation/audit-механізму |
+| [Keep Docs Updated for Confluence](https://marketplace.atlassian.com/apps/1928918939/keep-docs-updated-for-confluence) | Aptify Tech | 4 / 0 | **"Monitor outdated pages across ALL spaces"** (Global View) + ownership/@mention фільтри + embedded macro + CSV export. Жодного notification/escalation/audit-механізму |
+
+### I2. Аналіз gap-напрямків "поверх feature checklist"
+
+**Gap-напрямок 1: Notification overload → consolidated digest**
+- Customer evidence: Hank Church (2024-06-12, Phase I): "He has about 10 of those, so he got 10 different emails"; Trevor Angle/Atlassian: "50 expired pages... 50 separate emails"
+- Existing competitor coverage: **Better Content Archiving вже підтверджено налаштовує scheduled/event-triggered notifications з кастомним контентом і вже використовується для таргетованих alerts department heads** (не per-page спам)
+- Verdict: **COLLIDED** (підтверджено користувачем; тут лише зафіксовано чому саме)
+
+**Gap-напрямок 2: Escalation, коли owner не відповідає / manager escalation**
+- Customer evidence: загальне бажання "escalate to manager" згадується в community-дискусіях про Confluence review, але **жодної прямої скарги саме на 5 названих apps** не знайдено
+- Existing competitor coverage (за межами 5 названих, але реальний, комерційний): **Workflows for Confluence (AppFox)** — прямо підтверджено: "escalation rules can send reminders or escalate to a manager" — це вже продається
+- Native coverage: немає
+- Who has the problem / Frequency / Current workaround: Knowledge Manager, періодично, наразі вирішується через окремий approval/workflow app (не stale-detection app)
+- Would they pay: **так** — доведено існуванням Workflows for Confluence як окремого платного продукту
+- Why current [5] apps insufficient: правда, жоден з 5 цього не має
+- **Але:** це НЕ unmet market job — просто unmet цією конкретною підкатегорією (stale-detection). Реальний покупець уже має комерційний шлях вирішення
+- Minimal wedge: **не сформульовано** — рятувати штучним "але ці 5 apps цього не мають" заборонено правилом користувача
+- Verdict: **НЕ wedge**
+
+**Gap-напрямок 3: Accountability / review evidence / audit trail (version-locked proof)**
+- Customer evidence: **Flowdence** (community, 2026-03-20, vendor ApprovalFlow for Confluence, але формулювання точне й технічно конкретне): **"review 'completion' is typically a status label someone sets manually. There is no enforced record of who reviewed which version."** Оригінальне питання від Jurga Skeirytė (2025-11-26) прямо запитує про "accountability structures" і "metrics for measuring lifecycle management effectiveness" — це реальний buyer-side запит, перевірено 2026-09-20 ([ba-p відсутній, community-тред: "How Does Your Team Manage Content Governance and Lifecycle in Confluence?", qaq-p/3153346](https://community.atlassian.com/forums/Confluence-questions/How-Does-Your-Team-Manage-Content-Governance-and-Lifecycle-in/qaq-p/3153346))
+- Existing competitor coverage (за межами 5 названих): **ApprovalFlow for Confluence** та **Compliance for Confluence / Workflows for Confluence (AppFox)** — прямо продаються під ISO 27001/SOC2-evidence framing: "Can you show this was approved by the right person? Can you show this information was classified and access-controlled?" ([AppFox article, 2026-06-11](https://community.atlassian.com/forums/App-Central-articles/Turning-Confluence-into-ISO-27001-evidence-how-teams-actually-do/ba-p/3247228), перевірено 2026-09-20)
+- Native coverage: немає (version history не доводить, хто і коли схвалив САМЕ цю версію)
+- Would they pay: **так** — доведено активним 2026-vintage маркетингом декількох реальних вендорів саме під цю рамку
+- Why current [5] apps insufficient: Page Review Manager найближче ("audit entry inside Atlassian"), але не підтверджено version-locking; Evergreen явно НЕ версіонує ("never creates a version") — свідомий дизайн-вибір у бік легковажності, а не evidence-грейду
+- Minimal wedge: **знову НЕ unmet market job** — уже активно продається (ApprovalFlow, Compliance for Confluence, Workflows for Confluence), просто іншими вендорами, не з 5 названих
+- Verdict: **НЕ wedge**
+
+**Gap-напрямок 4: Cross-space / multi-space governance**
+- Customer evidence: загальне запитання (Jurga Skeirytė), без конкретної скарги "поточні tools не працюють across spaces"
+- Existing competitor coverage: **вже покрито двома з 5 названих apps напряму** — Better Content Archiving (space usage analytics на рівні всього сайту) і Keep Docs Updated ("Monitor outdated pages across ALL spaces" — буквально Global View)
+- Verdict: **НЕ gap, вже вирішено в межах самих 5 названих apps**
+
+**Gap-напрямок 5: Exceptions (сторінки, що ніколи не повинні "застаріти" — напр. юридичні шаблони)**
+- Existing competitor coverage: **Content Retention Manager for Confluence** (за межами 5, реальний адjacent app) прямо дозволяє "expire sooner, later, or never" + page-level exceptions; **Evergreen (один з 5 названих) вже має per-space AND per-page override порогів** — це вже є exceptions-механізм
+- Verdict: **НЕ gap**
+
+**Gap-напрямок 6: SLA / deadline enforcement (блокування, а не лише нагадування)**
+- Customer evidence: **не знайдено** жодної прямої цитати, де клієнт просить саме БЛОКУВАННЯ/обмеження доступу за протермінований review (лише нагадування/notification запитувались)
+- Existing competitor coverage: жоден з 5 названих цього не робить (усі — detect/notify/label, не gate)
+- Verdict: **Недостатньо customer evidence** для твердження про unmet job — не можна просувати без доказу, що це саме те, чого хочуть клієнти (за прямим правилом AGENTS.md §2)
+
+### I3. Підсумок Phase J
+
+| Gap-напрямок | Customer pain | Unmet market job | Reason to pay | Small impl. | Low support | Verdict |
+|---|---|---|---|---|---|---|
+| Notification overload/digest | Так | Ні (COLLIDED — Better Content Archiving) | — | — | — | Не wedge |
+| Escalation to manager | Слабо (загальне, не проти 5 apps) | Ні (Workflows for Confluence вже продає) | Так | — | — | Не wedge |
+| Accountability/version-locked audit evidence | Так (Flowdence, Jurga Skeirytė) | Ні (ApprovalFlow/Compliance/Workflows for Confluence вже продають) | Так | — | — | Не wedge |
+| Cross-space governance | Слабо | Ні (вже в 2 з 5 apps) | — | — | — | Не wedge |
+| Exceptions/never-expire | — | Ні (вже в Evergreen + Content Retention Manager) | — | — | — | Не wedge |
+| SLA/deadline enforcement (gate) | **Не знайдено** | Недостатньо доказів | — | — | — | Не просувається |
+
+**Кожен перевірений напрямок з брифу (escalation, SLA, accountability, exceptions, review evidence, audit requirements, manager escalation, multi-space governance) виявився АБО вже вирішеним одним із 5 названих apps, АБО вже комерційно вирішеним іншим реальним, активним вендором на тому ж Atlassian Marketplace (Workflows for Confluence, ApprovalFlow for Confluence, Compliance for Confluence, Content Retention Manager for Confluence), АБО не має достатнього прямого customer evidence, щоб його стверджувати.** Жоден напрямок не пройшов одночасно всі 5 обов'язкових умов (customer pain + unmet job + reason to pay + small implementation + low support burden) — щоразу зупинявся на "unmet job", бо ринок (нехай не ці 5 apps, а Atlassian Marketplace в цілому) вже має комерційну відповідь.
+
+**Verdict: KILLED.** Не через відсутність pain (pain реальний — problem class залишається `SURVIVES`, як зафіксовано користувачем), а тому що жоден конкретний unmet job не пережив перевірку: кожна гіпотеза колізує або з одним із 5 названих apps, або з реальним суміжним конкурентом на тому ж marketplace. Жодного штучно звуженого wedge не створено.
+
+**Explicitly not done in this phase:** жодного MVP, жодної нової keyword/marketplace sweep, жодного числового скорингу, жодного штучного порятунку відхиленого wedge.
+
 ## D. Candidate record
 
 Copy this block for each candidate query/wedge.
