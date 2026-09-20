@@ -729,6 +729,99 @@ Classified against the four B1 criteria: (1) real marketplace demand, (2) paid a
 
 **Наслідок для подальшого research:** оскільки обидві активні гіпотези вбиті, а `confluence page views analytics` на `HOLD` без конкретного unmet job, проект наразі не має жодного живого wedge-кандидата на Atlassian Marketplace серед 3 intent, досліджених у Phase C/D. Наступний крок — не BUILD і не REJECT усього напрямку Atlassian, а повернення до ширшого пулу intent з Phase B1 (WEAK-класифіковані або ще не досліджені) для пошуку нового кандидата з підтвердженим unmet job, або поглиблене повторне дослідження HOLD-інтенту, коли з'явиться конкретний job. Це рішення явно НЕ приймається в цьому документі — очікує вказівки користувача.
 
+### Phase F — Fresh Keyword Expansion (executed 2026-09-20)
+
+**Мета:** знайти нові customer-intent queries на Atlassian Marketplace, що можуть вести до вузького solo micro-SaaS wedge, явно оминаючи 3 закриті теми: (а) GDPR bulk PII classification, (б) HubSpot↔Jira integration, (в) `confluence page views analytics` (HOLD). Перевірено 35 нових queries за патернами `automatically.../bulk.../validate.../enforce.../prevent.../notify.../clean.../compare.../export.../detect.../find...`.
+
+**Обмеження методу (чесно задокументовано):**
+- Atlassian Marketplace search завжди показує "Showing over 1,000 matches for your query" незалежно від фактичної релевантності — це поле не є дискримінуючим сигналом і в таблиці нижче опущено як марно однакове для всіх 35 запитів.
+- Payment model (paid/free/freemium) не видно на сторінці результатів пошуку — тільки на сторінці конкретного застосунку (`tab=overview`, блок "Version information"). Перевірка цього поля для всіх ~175 застосунків (35 query × 5 апps) вимагала б у 5 разів більше запитів, ніж бюджет цієї фази дозволяє. Тому в таблиці нижче Pricing позначено як `NEEDS VERIFICATION`, окрім випадків, коли слово "Free" прямо в назві застосунку.
+
+**Повна таблиця (35 queries, перший прохід):**
+
+| # | Query | Top apps (installs, rating) | Small/new entrant visible? | Badges (RISING STAR/SPOTLIGHT/BESTSELLER) | External dependency | Initial verdict |
+|---|---|---|---|---|---|---|
+| 1 | automatically archive inactive projects jira | Projectrak (1.3k, 4.5); Deep Clone (11.9k, 4.5) | Ні (generic PPM/user-mgmt reuse) | Немає | Немає | WEAK |
+| 2 | automatically archive stale confluence pages | Better Content Archiving (1.2k, 4.8); Automatic Archiving for Confluence Cloud (19, 5.0); Stale Page Finder (3, —) | Так (2 tiny apps) | Немає | Немає | WEAK — сильний incumbent (1.2k) вже займає нішу |
+| 3 | automatically assign reviewer jira | SnapAssign (61, 5.0); Smart Assignments & Rotations (104, 4.4) | Так | Немає | Неоднозначно (Jira-native QA reviewer LOW vs. PR/code reviewer HIGH — потребує Bitbucket/GitHub) | NEEDS EVIDENCE |
+| 4 | automatically close stale issues jira | Sprint Automation Auto Start/Close (90, 5.0) — лише для sprint, не для issue staleness взагалі | Так | Немає | Немає | NEEDS EVIDENCE |
+| 5 | automatically label issues by content jira | Advanced Label Manager (1.4k, 4.0); Label Manager (747, 4.3) | Ні | Немає | Можливо (AI content-based labeling = LLM API) | WEAK |
+| 6 | bulk close subtasks jira | Deep Clone (11.9k, 4.5); Bulk Clone Professional (699, 4.7) | Ні | Немає | Немає | REJECT — насичено |
+| 7 | bulk delete old attachments confluence | GoEdit (834, 4.8); Cenote Lockpoint (788, 4.9) | Частково | Немає | Немає | WEAK |
+| 8 | bulk move issues between projects jira | Deep Clone (11.9k); Elements Copy & Sync (2.4k, 4.7) | Ні | Немає | Немає | REJECT |
+| 9 | bulk update custom field jira | Jira Misc Custom Fields/JMCF (3.3k, 4.8, Appfire) | Ні | Немає | Немає | REJECT — зрілий ринок |
+| 10 | bulk user management | User Mgmt for Jira (865, 4.8); Manage Users for Jira Cloud (935, 3.4) | Частково | Немає | Немає | REJECT |
+| 11 | clean broken links confluence | Link Management (575, 4.4); GitHub links (704, 3.8); Link Steward (NEW, 0 installs) | Так (Link Steward щойно запущений) | Немає (NEW label) | Немає | WEAK — середні incumbents вже займають |
+| 12 | clean inactive users jira | miniOrange auto-deactivation (252, 5.0); Manage Users for Jira Cloud (935, 3.4) | Частково | Немає | Немає | WEAK |
+| 13 | clean orphaned pages confluence | Немає прямого відповідника — топ apps: generic approval/formatting tools | — | Немає | — | REJECT — query не мапиться на реальний продукт |
+| 14 | compare confluence page versions | Compare Any Two Pages — Visual Diff (1 install, RUNS ON ATLASSIAN, щойно запущений); Version Info (106, 5.0) | Так (майже pre-traction) | Немає | Немає | **PROMISING** |
+| 15 | detect duplicate pages confluence | Немає прямого відповідника (Compliance for Confluence — інший job: DLP/sensitive data) | Ні | Немає | Можливо (text-similarity потребує ML) | NEEDS EVIDENCE |
+| 16 | enforce definition of done jira | ReDo (11, 5.0); Definition of Done & Ready (2, —); Definition of Ready (4, 5.0); Definition of Done (63, 2.8 — низький рейтинг) | Так (4 незалежні спроби) | Немає | Немає | **PROMISING** |
+| 17 | enforce naming convention jira | Немає dedicated app — топ: ScriptRunner (34.8k, generalist), Elements Connect (2.6k, generalist) | Ні | Немає | Немає | WEAK — вже вирішується generalist-платформами |
+| 18 | enforce page template confluence | Scaffolding Forms & Templates (1.3k, 4.4, Appfire); Page Tree Creator Pro (818, 4.7) | Ні | Немає | Немає | REJECT |
+| 19 | enforce required fields jira | JMCF (3.3k); Elements Connect (2.6k); easeRequirements (2k) | Ні | Немає | Немає | REJECT — зрілий ринок |
+| 20 | export confluence space to word | Scroll Word Exporter (4.7k, 4.9, BESTSELLER); Scroll PDF Exporter (8.9k, BESTSELLER) | Ні | BESTSELLER×2 | Немає | REJECT |
+| 21 | export jira issues to excel | Better Excel Exporter (4.4k, SPOTLIGHT); Xporter (3.8k) | Ні | SPOTLIGHT | Немає | REJECT |
+| 22 | export jira sprint report to excel | Better Excel Exporter (4.4k, SPOTLIGHT); eazyBI (11k, BESTSELLER) | Ні | SPOTLIGHT+BESTSELLER | Немає | REJECT |
+| 23 | find unassigned issues jira | Пошук повертає duplicate-detection apps — mismatch; ймовірно, задача вирішується нативним JQL-фільтром | — | — | — | WEAK — можливо, немає ринку через нативне рішення |
+| 24 | find unused custom fields jira | **0 apps знайдено взагалі** (порожня видача) | Н/Д — жоден конкурент не існує | — | Немає | NEEDS EVIDENCE (див. застереження нижче) |
+| 25 | notify manager before deadline jira | Reminder for Jira (1.2k, 4.5) | Частково | Немає | Немає | WEAK |
+| 26 | notify slack on sla breach jira | Time to SLA (3.4k, SPOTLIGHT); SLA Time and Report (772, 4.5) | Ні | SPOTLIGHT | Так (Slack API) | REJECT |
+| 27 | notify watchers on comment jira | Mentions Dashboard (65, 5.0); Smart Comments (159, 4.8) | Частково | Немає | Немає | WEAK |
+| 28 | prevent accidental page deletion confluence | "Who Deleted My Page(s)?" (2, —) — audit-only, не prevention | Так (tiny) | Немає | Немає | NEEDS EVIDENCE |
+| 29 | prevent duplicate issue creation jira | Find Duplicates (175, 4.9, 48 reviews) — сильний вузький incumbent | Частково | Немає | Немає | WEAK — ніша вже добре обслуговується одним лідером |
+| 30 | prevent issue reopening jira | Reopening Counter (48, 3.5) — лише tracking, не gate; Reopen Receipt (щойно запущений) | Так | Немає | Немає | **PROMISING** (з застереженням) |
+| 31 | prevent sprint start without estimation jira | SprintPoker (669, RISING STAR); Agile Poker (1.9k) | Ні | RISING STAR | Немає | WEAK — насичений ринок estimation-apps |
+| 32 | validate acceptance criteria jira | Acceptance Criteria for Jira Free (1.1k, 4.0); кілька tiny AI-клонів (0-8 installs) | Так (багато, фрагментовано) | Немає | Можливо (AI-generation = LLM API) | WEAK |
+| 33 | validate confluence page before publish | Comala Publishing (1.3k, 4.9, Appfire); AURA/KARMA suite | Ні | Немає | Немає | REJECT |
+| 34 | validate issue before transition jira | Create on Transition (1.1k, 4.7, Appfire); Undo Transition (154, 4.5) | Частково | Немає | Немає | WEAK |
+| 35 | validate story points before sprint start jira | Результати нерелевантні (Story Maps, SharePoint Connector) — низький сигнал query | — | — | — | REJECT |
+
+**Спостереження щодо badges:** RISING STAR/SPOTLIGHT/BESTSELLER зустрічаються виключно у великих, вже встановлених гравців (Appfire, K15t, eazyBI, Agile Pulse) — жоден з badge не з'явився серед вузьких/малих кандидатів. Це підтверджує, що Marketplace-просування концентрується навколо incumbents, а не є сигналом про нові ніші.
+
+### First-pass narrowing (35 → 8)
+
+За критеріями "чіткий, специфічний job-to-be-done" + "не вирішується вже native-функцією платформи або generalist-інструментом" + "хоча б слабкий сигнал повторюваного попиту" відібрано 8 кандидатів:
+
+| Query | Verdict (первинний) | Architecture Fit |
+|---|---|---|
+| enforce definition of done jira | PROMISING | LOW (Forge-native workflow validator) |
+| prevent issue reopening jira | PROMISING (із застереженням) | LOW |
+| compare confluence page versions | PROMISING (із застереженням) | LOW |
+| find unused custom fields jira | NEEDS EVIDENCE | LOW |
+| automatically assign reviewer jira | NEEDS EVIDENCE | НЕВИЗНАЧЕНО (LOW якщо Jira-native reviewer; HIGH якщо PR/code reviewer через Bitbucket/GitHub) |
+| detect duplicate pages confluence | NEEDS EVIDENCE | MEDIUM (text-similarity, ймовірно потребує зовнішній ML API) |
+| enforce naming convention jira | WEAK/NEEDS EVIDENCE | LOW номінально, але є generalist-substitute risk (ScriptRunner) |
+| prevent accidental page deletion confluence | NEEDS EVIDENCE | LOW |
+
+### Second-pass narrowing (8 → 3)
+
+Для кожного з 8 перевірено: paid demand, real installs, active competitors, smaller/new entrant presence, clear customer intent, Architecture Fit, очікуваний support burden.
+
+**enforce definition of done jira** → 4 незалежні спроби (ReDo, Definition of Done & Ready, Definition of Ready, Definition of Done) — це саме той патерн "кілька малих гравців атакують ту саму вузьку задачу, ніхто не робить це добре" (installs 2–63, один з великою кількістю встановлень має низький рейтинг 2.8/5). Definition of Done — стандартна, добре зрозуміла Scrum-термінологія → чіткий customer intent. Architecture Fit LOW. Support burden — MEDIUM (workflow gate, що блокує transition, вимагає продуманого UX для винятків). **Висновок: переходить у топ-3.**
+
+**prevent issue reopening jira** → обидва існуючі конкуренти (Reopening Counter, Reopen Receipt) вирішують сусідню, але іншу задачу — вони **вимірюють/трекають** повторні відкриття, а не **блокують** їх. Це може означати або (а) справжню незайняту нішу для hard-gate рішення, або (б) що реальні клієнти свідомо не хочуть жорсткого блокування (сприймається як каральне/тертя) і тому обидва конкуренти обрали visibility-only підхід. Support burden HIGH (workflow-blocker завжди генерує термінові тікети при збої; політично чутливо — команди можуть опиратися "гейтуванню"). **Висновок: переходить далі, але з явним відкритим питанням для Pain/Switching фази — чи клієнти справді хочуть "prevent", чи тільки "track".**
+
+**compare confluence page versions** → практично нульова конкуренція (1 install, pre-traction), але Confluence вже має нативне порівняння сусідніх версій — отже, реальний unmet job вужчий за формулювання запиту (порівняння несуміжних версій або крос-сторінкове порівняння). Architecture Fit LOW, support burden LOW (read-only). **Висновок: переходить у топ-3, з explicit застереженням про ризик перетину з нативною функцією платформи.**
+
+**find unused custom fields jira** → НАЙСИЛЬНІШИЙ сигнал "порожньої ніші" (0 конкурентів), але саме тому НЕ переноситься автоматично в топ-3: нуль конкурентів так само добре пояснюється тим, що ніхто не готовий платити за це, як і тим, що це незайнята територія. Проектне правило прямо забороняє висновок "мало/нуль конкурентів = хороша ніша" без додаткових доказів. Custom field bloat — відома біль в Jira admin спільнотах (Atlassian Community, Reddit) поза межами Marketplace-даних, але це зовнішній доказ, не перевірений у цій фазі. **Висновок: НЕ входить у фінальні 3 без додаткового зовнішнього підтвердження попиту; залишається як окремо задокументована ідея для майбутнього раунду.**
+
+**automatically assign reviewer jira** → відсікається через нерозв'язану двозначність job-to-be-done (Jira-native reviewer vs. PR/code reviewer з Bitbucket/GitHub) — Architecture Fit не може бути оцінений, доки не уточнено буквальний job.
+
+**detect duplicate pages confluence** → відсікається через Architecture Fit MEDIUM (ймовірна потреба в text-similarity/ML) у поєднанні з повною відсутністю навіть слабкої спроби конкурента (гірша комбінація, ніж "0 конкурентів + LOW fit").
+
+**enforce naming convention jira** → відсікається: це не порожня ніша, а ніша, вже вирішувана generalist-платформами (ScriptRunner, 34.8k installs) для тих, кому це дійсно важливо — ризик "рішення вже існує, просто не як окремий продукт".
+
+**prevent accidental page deletion confluence** → відсікається: Confluence Cloud вже має нативний kошик/відновлення протягом 60 днів, що суттєво звужує реальний unmet job до вузької підмножини (напр., permission-based delete-blocking для окремих просторів), а не widescale "prevention".
+
+### Фінальні 3 кандидати, що переходять у Pain/Switching дослідження
+
+1. **enforce definition of done jira** (Jira workflow-gate, що блокує transition до виконання DoD-чеклиста)
+2. **prevent issue reopening jira** (з відкритим питанням: "prevent" hard-gate vs. "track" visibility-only)
+3. **compare confluence page versions** (з відкритим питанням: наскільки нативна функція Confluence вже покриває цю потребу)
+
+Жоден кандидат не обраний як продукт, MVP чи архітектура не проектувались, числового скорингу не використано.
+
 ## D. Candidate record
 
 Copy this block for each candidate query/wedge.
