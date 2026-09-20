@@ -599,6 +599,136 @@ Classified against the four B1 criteria: (1) real marketplace demand, (2) paid a
 
 **Explicitly not done:** жоден продукт не обрано; MVP не спроєктовано; numeric score не використано; жоден intent не позначено PASS на основі кількості негативних відгуків; слабкість конкурента не інтерпретована як доказ власного попиту.
 
+### Методологічне уточнення (застосовується з 2026-09-19): класифікація switching evidence
+
+За вказівкою користувача, відсутність literal "switched from X to Y" більше НЕ трактується як автоматичний провал доказової бази. Switching evidence далі розділяється на 4 типи:
+
+- **A — direct replacement:** явна заміна одного рішення іншим (конкурент→конкурент, або інструмент→продукт).
+- **B — comparison-shopping:** клієнт явно оцінював кілька варіантів перед вибором.
+- **C — replacement intent:** клієнт висловлює намір/бажання замінити, але ще не діяв.
+- **D — pain only:** скарга/фрустрація без будь-якого порівняння чи наміру заміни.
+
+Ретроспективна класифікація ключових сигналів з Phase D:
+- Anne Dietz (HubSpot/Getint, "tested a lot of integration tools to find the right one for us") → **B**.
+- Craig Parsons ("Best HS integration yet"), Thilini Rathnayake ("easiest... I've worked with") → слабкий/імпліцитний **B**.
+- Andy Gladstone (view26) та Natalie Dolce (Google Analytics in Confluence) — заміна вбудованого Confluence-рішення платним app → фактично **A** (direct replacement), але baseline — не конкурент, а "no tool"/native functionality, що є іншим типом ринкового сигналу, ніж класичний competitor-to-competitor switch.
+- Rob Shannon, Mahyar Ghaffarpour, James Charles, Steffen Grabaum, Besar Bilalli, Amin Mirzaee → **D** (pain only, без порівняння).
+- OpsHub's власна фіча "Excel-based user mapping — no more sync failures from user mismatches" (Phase E, нижче) → непрямий, vendor-inferred сигнал типу **C** (вендор явно побудував фічу проти відомої категорії проблем, що натякає на реальний, повторюваний customer pain, який спонукав до заміни/незадоволення) — не пряма customer quote, тому позначено окремо.
+
+## E. Phase E — Wedge Kill Test (executed 2026-09-19)
+
+**Мета:** не підтвердити красиву ідею, а спробувати ВБИТИ обидві гіпотези з Phase D. `confluence page views analytics` переведено у `HOLD` — дослідження не продовжується, поки не знайдено конкретний unmet job (див. DECISION.md).
+
+---
+
+### Кандидат 1: GDPR/Confluence — "bulk/default PII classification for legacy Confluence spaces"
+
+**Досліджено 8 існуючих Marketplace apps** (усі Confluence Cloud, дата перевірки 2026-09-19):
+
+| App | Vendor | Installs/Reviews | Exact workflow | Чого НЕ вирішує |
+|---|---|---|---|---|
+| [Compliance for Confluence](https://marketplace.atlassian.com/apps/1218474/compliance-for-confluence-dlp-classification-detection?hosting=cloud&tab=overview) | AppFox | 502 / 11 | **Bulk classification вже є**: "Save time with the new bulk classification feature! You can now easily classify multiple pages in one action and use Confluence Query Language (CQL) to narrow the scope." Плюс: default classification, enforce-classification-before-publish, access restriction за рівнем класифікації, audit log, AI-детекція. | AI-детекція описана як "AI-tools" вже присутня (не gap); не покриває consent/DSAR workflows. |
+| [Data Protection Toolkit](https://marketplace.atlassian.com/apps/1219041/data-protection-toolkit-gdpr-pii-dlp-for-confluence?hosting=cloud&tab=overview) | Actonic | 176 / 8 | Сканування за шаблонами, **"Schedule checks so nothing slips through"** (уже bulk+scheduled), redact/replace/comment/notify, consent forms, DSAR/right-to-be-forgotten. | Reliability-баги на PDF export (Phase D); UI/UX складність. |
+| [PII Protection and DLP for Confluence](https://marketplace.atlassian.com/apps/1230602/pii-protection-and-dlp-for-confluence?hosting=cloud&tab=overview) | Polymetis Apps | 50 / 1 (5/5) | Сканування простору за 70+ типами PII, **автоматизовані дії через Confluence/Jira Automation**, класифікація з кастомними рівнями, SOC 2 Type II, Forge-native (дані не залишають інстанс). | Молодий продукт (1 review) — реальна довгострокова demand-picture ще не підтверджена. |
+| [Data - PII Scanner (DLP) for Confluence](https://marketplace.atlassian.com/apps/1233049/data-pii-scanner-dlp-for-confluence?hosting=cloud&tab=overview) | miniOrange | 22 / 0 | Real-time сканування (при create/update), 80+ типів даних, attachment-сканування (PDF/Word), custom regex, automated redaction, violation dashboard, Forge-native. Явно написано: **"Coming up: AI-based scanning, scheduled scans"** — тобто scheduled/bulk-сканування ЩЕ немає, тільки real-time. | Bulk/scheduled scan — поки що реальний gap саме в цьому одному app (але вже "Coming up", отже недовго). |
+| [SoftComply Validation for Confluence](https://marketplace.atlassian.com/apps/1229288/softcomply-validation-for-confluence-medtech-compliance?hosting=cloud&tab=overview) | SoftComply | 57 / 2 | Періодичні (twice-monthly) автоматизовані validation-тести — інша ніша (MedTech eQMS validation, не PII-класифікація як така). | Не PII-класифікація за своєю суттю — інший job. |
+| [Compliance Glossary for Confluence](https://marketplace.atlassian.com/apps/460119464/compliance-glossary-for-confluence?hosting=cloud&tab=overview) | DailyMind | 3 / 0 | Term-level approval workflow, **compliance scanner на кожен page save** (event-driven, не bulk), CSV audit evidence export. Інший job: контрольована термінологія/glossary, не PII. | Не PII/DLP за суттю. |
+| STAGIL Workflows and Fields | STAGIL | 50 / 0 | Jira workflows/fields на Confluence-сторінках — **не PII/GDPR app взагалі**, off-topic, помилково потрапив у B1-вибірку за назвою "compliance". | Немає стосунку до PII-класифікації. |
+| [DLP - Sensitive Data (PII, GDPR) Scanner for Confluence](https://marketplace.atlassian.com/apps/544091142/dlp-sensitive-data-pii-gdpr-scanner-for-confluence?hosting=cloud&tab=overview) | (unlisted vendor) | — | Regex-based сканування + page history, encrypt/redact/delete, migration-readiness tools, 9 релізів з Dec 2025 (активна розробка). **Version history показує тільки "Confluence Data Center" реліфи** — це, схоже, Data Center-only app, НЕ Cloud-конкурент. | Не прямий Cloud-конкурент (потребує окремої перевірки хостингу — NEEDS EVIDENCE). |
+
+**Відповіді на контрольні питання:**
+
+1. **Чи функція вже є у 5-10 existing apps?** Так, повністю або майже повністю — у мінімум 3 з 8 (AppFox — bulk+default+enforce; Actonic — scheduled bulk scan+redact; Polymetis — space-level scan+classify+automate). Ще 1 (miniOrange) явно анонсував це як "Coming up".
+2. **Exact workflows, що вони підтримують:** CQL-scoped bulk classification (AppFox); scheduled recurring scans з auto-редакцією (Actonic); space-level scan → classify → trigger Automation (Polymetis); real-time per-save scanning (miniOrange, Compliance Glossary).
+3. **Що вони НЕ вирішують:** жоден із самльованих apps не поєднує "PII-виявлення" з **одноразовим legacy-cleanup проєктом** (на відміну від recurring-моніторингу) — усі продаються як continuous-compliance підписки, не як разовий "приберіть стару wiki" сервіс/інструмент. Це не підтверджено прямим customer evidence (жоден клієнт цього явно не просив) — тому це NEEDS EVIDENCE спостереження, не підтверджена гіпотеза.
+4. **Чи є вузький job, не покритий existing apps?** За зібраними доказами — ні, для буквально сформульованої гіпотези "bulk/default PII classification." Єдина залишкова, неперевірена ідея — "разовий legacy PII cleanup" як інша товарна форма (не підписка), але це спекуляція без клієнтського підтвердження.
+5. **Чи можна вирішити однією вузькою feature set?** Гіпотетично так, але сама feature set (bulk scan+classify) вже не унікальна.
+6. **Forge-first без external data egress?** Так, це вже стандарт категорії — AppFox, Polymetis, miniOrange усі явно заявляють Forge-native/no-data-leaves-instance. Не диференціатор.
+7. **Security/privacy burden:** Високий за замовчуванням для всієї категорії (сканування чутливого контенту користувачів) — усі серйозні гравці інвестують у SOC 2/Bug Bounty/Trust Center; новий entrant без цього стартує в невигідній позиції довіри.
+8. **Support burden:** MEDIUM-HIGH (не змінилось з Phase D) — bulk-дії на клієнтському контенті.
+
+**EXISTING SOLUTIONS** → AppFox (bulk+enforce+access-control), Actonic (scheduled scan+redact+consent), Polymetis (automation-triggered scan+classify), miniOrange (real-time, scheduled "coming soon") — 4 прямих, активно розвинутих конкуренти покривають майже весь заявлений job.
+
+**UNMET JOB** → Не знайдено в межах буквальної гіпотези. Єдина неперевірена, спекулятивна альтернатива — "разовий legacy-cleanup" як окремий товар (не підписка) — без жодного прямого клієнтського запиту на це.
+
+**MINIMAL WEDGE** → Немає обґрунтованого мінімального wedge для заявленої гіпотези.
+
+**WHY USER WOULD INSTALL** → Не встановлено доказами (job вже закритий конкурентами).
+
+**WHY USER WOULD PAY** → Не встановлено доказами.
+
+**SUPPORT TRAP** → MEDIUM-HIGH (характерно для всієї категорії, не специфічно для гіпотези).
+
+**SECURITY/API TRAP** → Категорія вимагає читання/зміни всього корпоративного Confluence-контенту — це сам по собі high-trust bar; новий entrant без track record матиме високий поріг довіри клієнтів (compliance officers за визначенням обережні).
+
+**BUILD COMPLEXITY** → Помірна технічно (Confluence REST/Forge API добре документовані для search/labeling), але конкурентний бар'єр (довіра, track record, сертифікації) високий.
+
+**REJECT REASON** → **Feature вже існує, повністю або майже повністю, у щонайменше 3 активно підтримуваних конкурентів** (AppFox, Actonic, Polymetis), включно з bulk CQL-scoped операціями, scheduled-сканами, і automation-тригерами. Пряма інструкція проекту: "Особливо заборонено називати bulk classification 'wedge', якщо feature уже є у конкурентів" — застосовано буквально.
+
+**Verdict: KILLED.**
+
+---
+
+### Кандидат 2: HubSpot ↔ Jira — "reliable field-type sync"
+
+**Досліджено 7 existing integrations** (дата перевірки 2026-09-19):
+
+| App | Vendor | Installs/Reviews | Sync scope | Field types | Auth | Sync conflict/retry |
+|---|---|---|---|---|---|---|
+| [HubSpot CRM Integration for Jira](https://marketplace.atlassian.com/apps/1226482/hubspot-crm-integration-for-jira?hosting=cloud&tab=overview) | Appsvio | 379 / 9 | Read-only: HubSpot-дані (deals/companies/contacts) на Jira-issue; two-way visibility (Jira-дані видно в HubSpot без Jira-доступу) | Custom fields, HubSpot Object Picker (single/multi-select) | OAuth (Atlassian-managed) | Не описано детально |
+| [HubSpot CRM Connector for Jira](https://marketplace.atlassian.com/apps/1227969/hubspot-crm-connector-for-jira?hosting=cloud&tab=overview) | Presago | 225 / 4 | Sync contacts/companies/deals/tickets → Jira issues; custom filtered views | Не деталізовано | Не деталізовано | Не деталізовано |
+| [HubSpot Integration for Jira FORGE](https://marketplace.atlassian.com/apps/1231637/hubspot-integration-for-jira-hubspot-connector-forge?hosting=cloud&tab=overview) | Getint | 144 / 4 | **Повний two-way sync**: коментарі, нотатки, статуси, вкладення, контакти, угоди, кастомні поля; гнучкий field mapping і напрямок синхронізації | Custom fields — **але відомий gap**: multi-select і date fields не підтримувались (Phase D, Anne Dietz, тип **B**); changelog Sep 2026 показує continuous fixes для date/query/attachment-полів **у всіх** інтеграціях Getint (Asana DUE field, ClickUp custom queries, Freshservice attachments) — це системна, не HubSpot-специфічна проблема архітектури мульти-платформного конектора, що активно закривається | OAuth/API token (Forge) | Не деталізовано; активний bug-fix cadence (щомісячні релізи) |
+| [HubSpot Connector for Jira](https://marketplace.atlassian.com/apps/2205524648/hubspot-connector-for-jira?hosting=cloud&tab=overview) | Korvex Systems | 457 / 0 | **Display-only, one-way, або two-way — на вибір**, per-item конфігурація; status/comment/attachment sync toggles окремо | Field mappings (деталі невідомі) | Private app token | **Scheduled sync кожні 5 хвилин** + event-triggered push на Jira issue/comment/attachment events — конкретна, задокументована retry/sync-cadence модель |
+| [HubSpot CRM for Jira](https://marketplace.atlassian.com/apps/1228240/hubspot-crm-for-jira-report-issue-link-collaboration?hosting=cloud&tab=overview) | resolution Reichert | 490 / 11 | **Embed + automation-trigger**, не full sync: показ Contacts/Companies/Deals у Jira-issue; тригер створення/лінкування HubSpot-об'єктів на основі Jira-даних; HubSpot лишається "single source of truth" | Не деталізовано | Не деталізовано | Перша версія app ("first version of this app") — вже 490 installs/11 reviews, гарна traction для v1 |
+| [HubSpot Integration for Jira (Bidirectional Sync)](https://marketplace.atlassian.com/apps/1238418/hubspot-integration-for-jira-bidirectional-sync?hosting=cloud&tab=overview) | OpsHub, Inc. | — / 1 (5/5) | Enterprise-grade, **зовнішній** (не Forge-плагін, працює через secure API, cloud/on-prem/hybrid deployment), no/low-code field mapping, sync CRM+dev workflows за бізнес-логікою | Deals, Tickets, Contacts, Notes, Tasks + коментарі/вкладення/статуси | Secure API (зовнішній, не Atlassian OAuth) | **Явно задокументована eventual-consistency модель з error recovery**; окрема фіча — **"Excel-based user mapping — no more sync failures from user mismatches"** — прямий доказ (vendor-побудована фіча), що user/field mismatch — це визнана, повторювана категорія проблем у ніші (тип **C**, vendor-inferred) |
+| HubSpot's власна нативна інтеграція (knowledge.hubspot.com) | HubSpot | — | Офіційна, безкоштовна HubSpot↔Jira інтеграція існує від самого HubSpot | — | — | Пряма конкуренція з платформи-власника даних — додатковий platform-risk |
+
+**Відповіді на контрольні питання:**
+
+1. **5-10 existing integrations:** 7 прямих + 1 нативна від HubSpot = 8 знайдено.
+2. **Exact sync scope:** покрито все: full two-way (Getint), configurable two-way/one-way/display-only (Korvex), read-only display (Appsvio), embed+automation-trigger (resolution), enterprise external no-code (OpsHub), нативна безкоштовна (HubSpot).
+3. **Supported field types:** переважно "custom fields" загалом; підтверджений конкретний gap (multi-select, date) лише в одному конкуренті (Getint), і цей gap — частина ширшого, системного (мульти-платформного) технічного боргу, що активно закривається щомісячними релізами.
+4. **Mapping/configuration complexity:** варіюється від "5 minutes setup" (Getint marketing claim) до enterprise Excel-based mapping (OpsHub) — весь спектр складності вже представлений на ринку.
+5. **Common customer complaints:** reliability/installation-баги (Appsvio, resolution — Phase D, тип **D**); відсутність деяких типів полів (Getint, тип **B**); user/field mismatch (непрямо, OpsHub feature, тип **C**).
+6. **API dependencies:** усі залежать від HubSpot API (зовнішній, поза Atlassian-екосистемою) + Jira/Forge API — подвійна залежність для будь-якого нового entrant.
+7. **Auth/permissions complexity:** OAuth (більшість), private app token (Korvex), secure API зовнішній (OpsHub) — стандартний спектр, не є диференціатором.
+8. **Sync conflict/retry:** тільки 2 з 7 (Korvex, OpsHub) явно документують конкретну модель (5-хв cron / eventual consistency) — це справді слабко задокументована зона в категорії загалом, але не є "unmet job", а деталь реалізації.
+9. **Support burden:** підтверджено високий за структурою категорії (customer-specific field mapping, залежність від зовнішнього API).
+10. **Чи можна звузити до одного вузького workflow?** Спробовано: "тільки read-only показ CRM-контексту в Jira" — **вже є** (Appsvio, Korvex display-only mode). "Тільки embed + automation-trigger, без sync" — **вже є** (resolution, і це "перша версія", отже свіжий, підтверджений напрямок з хорошою traction). Кожна спроба звуження впирається в existing app, що вже займає саме цю вузьку нішу.
+
+**EXISTING SOLUTIONS** → 7 прямих конкурентів + нативна HubSpot-інтеграція покривають повний спектр: full two-way, конфігурований two-way/one-way/display-only, read-only, embed+automation-trigger, enterprise no-code external.
+
+**UNMET JOB** → Не знайдено вузького, не зайнятого workflow. Кожна спроба звузити scope (read-only, embed-only, display-only) вже реалізована щонайменше одним активним конкурентом.
+
+**MINIMAL WEDGE** → Немає life обґрунтованого мінімального wedge, що одночасно (а) вузький, (б) не порушує вимогу "не повноцінна two-way integration", і (в) не вже зайнятий.
+
+**WHY USER WOULD INSTALL** → Не встановлено доказами для нового, відмінного від існуючих, продукту.
+
+**WHY USER WOULD PAY** → Не встановлено доказами.
+
+**SUPPORT TRAP** → HIGH (підтверджено з Phase D) — не змінилось: integration-категорія структурно генерує customer-specific конфігурацію і залежить від чужого (HubSpot) API.
+
+**SECURITY/API TRAP** → HIGH — подвійна зовнішня залежність (HubSpot API + Jira/Forge API); HubSpot може змінити API без узгодження з Atlassian-екосистемою; жоден з існуючих конкурентів не документує чіткий SLA щодо breaking changes.
+
+**BUILD COMPLEXITY** → Висока: інтеграційна категорія за визначенням вимагає підтримки двох незалежних, зовнішньо-керованих API, і конкуренти вже покрили весь спектр архітектурних підходів (Forge-native, зовнішній сервіс, гібрид).
+
+**REJECT REASON** → **Кожна вузька конфігурація вже зайнята активним конкурентом**, а сам конкретний evidence-based gap (field-type completeness) — це якість виконання наявного продукту (і вже активно виправляється постачальником), а не новий, незайнятий job. Пряма інструкція проекту ("не пропонуй повноцінну two-way integration") звужує можливий wedge до підмножини, яка вже цілком заповнена (read-only/display-only/embed-trigger).
+
+**Verdict: KILLED.**
+
+---
+
+### Підсумок Phase E
+
+| Гіпотеза | Verdict | Головна причина |
+|---|---|---|
+| GDPR/Confluence bulk PII classification | **KILLED** | Feature вже реалізована (bulk+scheduled+automated) щонайменше у 3 активних, добре задокументованих конкурентів |
+| HubSpot↔Jira reliable field-type sync | **KILLED** | Кожна можлива вузька конфігурація (read-only/display-only/embed-trigger/full two-way/enterprise no-code) вже зайнята активним конкурентом; сам evidence-gap — якість виконання, що конкурент активно виправляє |
+
+**Обидві гіпотези з Phase D не пережили kill test.** Це чесний, а не невдалий результат: методологія (AGENTS.md §5, Veto rules: "Wedge = veto") явно передбачає, що відсутність wedge зупиняє прогрес до BUILD, і не повинна компенсуватися рештою плюсів (реальний попит із Phase C, значна кількість позитивних відгуків тощо). Жоден з двох кандидатів не проектувався в MVP чи architecture — обидва зупинені на стадії гіпотези.
+
+**Наслідок для подальшого research:** оскільки обидві активні гіпотези вбиті, а `confluence page views analytics` на `HOLD` без конкретного unmet job, проект наразі не має жодного живого wedge-кандидата на Atlassian Marketplace серед 3 intent, досліджених у Phase C/D. Наступний крок — не BUILD і не REJECT усього напрямку Atlassian, а повернення до ширшого пулу intent з Phase B1 (WEAK-класифіковані або ще не досліджені) для пошуку нового кандидата з підтвердженим unmet job, або поглиблене повторне дослідження HOLD-інтенту, коли з'явиться конкретний job. Це рішення явно НЕ приймається в цьому документі — очікує вказівки користувача.
+
 ## D. Candidate record
 
 Copy this block for each candidate query/wedge.
