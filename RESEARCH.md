@@ -822,6 +822,129 @@ Classified against the four B1 criteria: (1) real marketplace demand, (2) paid a
 
 Жоден кандидат не обраний як продукт, MVP чи архітектура не проектувались, числового скорингу не використано.
 
+## F2. Phase G — Native Capability Kill Test (executed 2026-09-20)
+
+**Мета:** не феча-порівняння заради документації, а спроба ЗНИЩИТИ кожного з 3 кандидатів Phase F, встановивши: чи потребує заявлений job стороннього Marketplace app взагалі, чи Jira/Confluence вже закриває його native (workflow conditions, validators, forms, required fields, automation, transition restrictions, native version history/compare).
+
+---
+
+### Кандидат 1: `enforce definition of done jira`
+
+**NATIVE CAPABILITY** →
+- **Field Required Validator** — блокує transition, якщо конкретне обране поле порожнє. Офіційний шлях: Project settings → Workflows → редагувати workflow → обрати transition → Add validator → Field Required Validator → обрати поле → error message → publish. ("users won't be able to complete the transition to the 'Closed' status if the required field is empty.") (https://support.atlassian.com/jira/kb/mandatory-field-validation-for-issue-closure-in-jira-cloud/, перевірено 2026-09-20)
+- **Умови (Conditions)**: Permission Condition, User/Group/Role Condition, Value Field Condition (transition дозволено лише якщо поле = певне значення), Previous Status Condition. (https://support.atlassian.com/jira-cloud-administration/docs/configure-advanced-issue-workflows/, перевірено 2026-09-20)
+- **Sub-Task Blocking Condition** — окрема нативна умова, що блокує закриття батьківського issue, поки є відкриті subtasks (тільки Company-managed проекти; недоступна в Team-managed). (https://support.atlassian.com/jira/kb/how-to-prevent-issues-from-being-closed-while-the-sub-tasks-are-still-open-in-jira/, перевірено 2026-09-20)
+- Кілька Field Required Validators можна додати на один transition (по одному на поле) — стандартна поведінка редактора workflow дозволяє кілька validators на transition; офіційна документація не описує явно "stacking" кількох validators як єдину фічу, тому це помірно впевнений висновок з UI-поведінки, а не пряма цитата.
+
+**NATIVE LIMITATION** →
+- Немає нативного **checklist field type**: Jira Cloud взагалі не має вбудованого чекліста як типу поля. ("Jira doesn't come with a built-in checklist feature, so you will need to use a third-party app from the Atlassian Marketplace." — Atlassian Community, перевірено 2026-09-20)
+- Field Required Validator перевіряє одне окреме поле; немає єдиного нативного механізму "N з M критеріїв виконано" (структурований DoD-чекліст із частковим прогресом, підпунктами, шаблонами per issue type).
+- Post-functions виконуються ПІСЛЯ transition і не можуть блокувати його.
+
+**Висновок:** це чітке підтвердження різниці, яку просив користувач — `basic transition gating` (одне-два обов'язкові поля через Field Required Validator) є нативним; `structured Definition-of-Done enforcement` (багатопунктовий чекліст з validator-гейтом, шаблонами, частковим прогресом) — НЕ є нативним і вимагає app.
+
+**EXISTING MARKETPLACE SOLUTIONS** → залишковий gap (checklist + validator gating) вже щільно закритий, і не малими гравцями:
+| App | Vendor | Installs/Reviews/Rating | Що саме робить |
+|---|---|---|---|
+| [Checklists for Jira (Pro)](https://marketplace.atlassian.com/apps/1213231/checklists-for-jira-pro-by-herocoders) | HeroCoders | **7,887 / 264 / 4.5** | Явно позиціонується для DoD: "Execute workflows with automated Jira checklists... to enforce DoD and acceptance criteria"; має власні checklist workflow validators, що блокують transition, поки чекліст не завершено. |
+| [Enterprise Checklists for Jira](https://marketplace.atlassian.com/apps/2171539829/enterprise-checklists-for-jira) | Cognitiff | 1 review / 5.0 (installs не розкрито) | "native workflow validators" явно блокують transition ("Automatically block issue transitions... until every single checklist item is completed"); також audit trail з CSV export, JQL-ready progress fields. |
+| [Definition of Done](https://marketplace.atlassian.com/apps/1215779/definition-of-done) | Chasing Agility | 63 / 4 / 2.8 | Буквально названий "Definition of Done"; workflow validator блокує transition до Done, поки критерії (checklist/bullet list) не виконані; пошук по JQL за статусом виконання. |
+
+(усі три перевірені 2026-09-20 напряму на сторінках marketplace.atlassian.com)
+
+Це суттєво доповнює/корегує Phase F: Phase F знайшов лише 4 малих, слабко виконаних apps (2–63 installs) за буквальним пошуком "definition of done" / "DoD" у назві, але не врахував ширшу категорію "Checklist for Jira", яка функціонально вирішує той самий job і має домінантного гравця з майже 8 тисячами встановлень.
+
+**REAL UNMET JOB** → Не знайдено в межах буквального запиту. Job "checklist, що блокує transition, поки DoD не виконано" вже реалізований, добре відпрацьований і активно продається щонайменше 3 конкурентами, один з яких — домінантний incumbent (7,887 installs). Спекулятивна, неперевірена вузька альтернатива (напр., DoD-шаблони, прив'язані вузько до однієї regulated-галузі, або дуже спрощений single-purpose app без повного checklist-фреймворку) не підтверджена жодним клієнтським доказом — це НЕ рятує кандидата, лише фіксується як неперевірена ідея.
+
+**MINIMAL POSSIBLE WEDGE** → Немає обґрунтованого мінімального wedge: будь-яка вузька версія "checklist + validator gate" вже є частиною функціоналу incumbent (HeroCoders) і кількох менших конкурентів.
+
+**SUPPORT RISK** → MEDIUM (workflow-blocker вимагає продуманого UX для винятків/override, інакше генерує термінові тікети "чому я не можу закрити issue").
+
+**PLATFORM RISK** → LOW (Field Required Validator + custom workflow validator module — стандартний, добре задокументований Forge/Connect механізм; https://developer.atlassian.com/cloud/jira/platform/modules/workflow-validator/, перевірено 2026-09-20).
+
+**VERDICT: KILLED.**
+
+---
+
+### Кандидат 2: `prevent issue reopening jira`
+
+**NATIVE CAPABILITY** → Native покриває майже весь заявлений job:
+1. **Повне блокування** — просто не додавати transition з Closed назад у відкритий статус (структурна зміна workflow, без app).
+2. **Обмеження для конкретних users/groups** — Permission Condition / User-Group-Role condition на transition (Company-managed); а також окрема нативна рула **"Restrict who can move a work item"** — доступна і в Team-managed проектах, дозволяє обрати assignee/reporter/конкретного користувача/role/group/permission. (https://support.atlassian.com/jira-service-management-cloud/docs/available-workflow-rules-in-team-managed-service-projects/, перевірено 2026-09-20)
+3. **Time-limited reopen** — **Date Compare Validator** (Company-managed): напр. `Resolved > -14d`, дозволяє reopen лише протягом 15 днів після резолюції. (https://support.atlassian.com/jira/kb/limit-customer-issue-reopening-to-x-days-after-resolution/, перевірено 2026-09-20)
+4. **Conditional reopen** — Value Field Condition (transition дозволено лише якщо задане поле має конкретне значення).
+5. **Auditability** — issue history/activity log нативно показує всі виконані (успішні) transitions, включно з reopen, разом з автором і часом.
+6. **JSM customer portal edge case** — офіційна документація прямо визнає обмеження: "Transitions executed from the Jira Service Management Portal ignore validators" — і прямо рекомендує нативну (безкоштовну) **automation rule** замість validator для цього випадку: перевірка `{{now.diff(issue.resolved).days}}` і додавання коментаря-відмови, якщо умова не виконана. Це теж нативний, безкоштовний механізм (Jira automation), не Marketplace app. (той самий source, перевірено 2026-09-20)
+
+**NATIVE LIMITATION** →
+- Team-managed проекти НЕ підтримують Date Compare Validator і Value Field Condition (складні transition validators/conditions) — доступна лише базова роль/користувач-рестрикція через "Restrict who can move a work item". Тобто *time-limited* і *conditional-by-field* reopen-обмеження в Team-managed проектах нативно недоступні (лише via automation rule, реактивно, а не як hard validator). (https://community.atlassian.com/forums/Jira-questions/I-have-a-team-managed-project-and-would-like-to-set-up/qaq-p/2180767, перевірено 2026-09-20)
+- Немає нативного audit trail для **заблокованих спроб** reopen (Jira логує тільки успішні transitions, не спроби, яким умова відмовила).
+- Немає нативного **звіту про кількість повторних reopen** на issue/проект: JQL підтримує оператор `WAS` (issue був у певному статусі хоча б раз), але не рахує, скільки разів. Це підтверджено прямо: "native Jira lacks a built-in report to count reopenings... You'll need a marketplace app." (https://community.atlassian.com/forums/App-Central-articles/How-to-Find-and-Analyse-Reopened-Issues-in-Jira/ba-p/2732595, перевірено 2026-09-20)
+
+**EXISTING MARKETPLACE SOLUTIONS** → сам залишковий gap (підрахунок/звітність reopen) уже закритий двома різними шляхами:
+| App | Vendor | Installs/Reviews/Rating | Що робить |
+|---|---|---|---|
+| [Reopening Counter for Jira](https://marketplace.atlassian.com/apps/1212789/reopening-counter-for-jira) | Rozdoum | 48 / 11 / 3.5 (Cloud доступний) | Dashboard gadget + issue-view лічильник кількості reopen на issue; візуалізація "проблемних" issues/команд. |
+| [Timepiece – Time in Status for Jira](https://marketplace.atlassian.com/apps/1211756/timepiece-time-in-status-for-jira) | OBSS | **4,477 / 270 / 4.8** | Генералістський звітний застосунок; має "Status Count report", що явно виявляє "reopens and rework loops" через підрахунок відвідувань статусу — reopen-звітність тут лише один з 15+ типів звітів, не окремий продукт. |
+
+(обидва перевірені 2026-09-20)
+
+**REAL UNMET JOB** → Для рамки "prevent/block" (буквальний запит) — job вже вичерпно вирішений native (повне блокування, рестрикція за роллю/групою навіть у Team-managed, time-limit і умовний гейт у Company-managed, automation-based обхід для JSM порталу). Це прямий збіг з попередженням користувача: "Не називай `prevent reopen` wedge, якщо native workflow already handles the exact job." Залишковий, вужчий job — **зручна, готова reopen-аналітика/звітність** — це вже ІНША задача (не "prevent", а "measure"), і вона вже покрита і нішевим (Reopening Counter, 48 installs), і великим генералістським incumbent (Timepiece, 4,477 installs).
+
+**MINIMAL POSSIBLE WEDGE** → Немає обґрунтованого мінімального wedge для заявленої "prevent reopening" гіпотези; вужча "reopen-only analytics" ніша технічно ще не насичена спеціалізованим гравцем з великою тракцією, але це вже інший job-to-be-done, не той, що досліджувався, і згадується тут лише для повноти, а не як спроба штучно врятувати кандидата.
+
+**SUPPORT RISK** → HIGH (підтверджено з Phase F) — workflow-блокер, що спрацьовує невірно, генерує термінові, високовидимі тікети; це не змінюється тим, що механізм нативний чи сторонній.
+
+**PLATFORM RISK** → LOW-MEDIUM — усі задіяні механізми (Conditions, Validators, "Restrict who can move a work item", Automation) — стандартні, добре задокументовані нативні Jira Cloud фічі; ризик радше в Team-managed/Company-managed feature-parity (описано вище), ніж у самій платформі.
+
+**VERDICT: KILLED** (для буквальної "prevent/block reopening" гіпотези — native вже вирішує цей job; залишкова "reopen analytics" — інший, вже зайнятий job, не еквівалент початкової гіпотези).
+
+---
+
+### Кандидат 3: `compare confluence page versions`
+
+**NATIVE CAPABILITY** →
+- **Version History**: доступна через More actions → Version history на будь-якій сторінці.
+- **Compare selected versions**: користувач відмічає чекбоксами будь-які **дві довільні версії** (не обов'язково суміжні, напр. версію 2 і версію 10) і натискає "Compare selected versions". (https://confluence.atlassian.com/doc/page-history-and-page-comparison-views-139379.html, перевірено 2026-09-20 — документація Data Center/Server-lineage, але описаний UI-патерн підтверджується і в Cloud-орієнтованих сторонніх джерелах, напр. community-форум "Compare versions of the same page")
+- **View changes/diff-вигляд**: додане підсвічено зеленим, видалене — червоним, зміни форматування — синім; великі незмінені блоки тексту згортаються в "…" для читабельності.
+- Навігація між сусідніми порівняннями прямо з екрана порівняння (напр., переглядаючи diff версій 30↔34, можна одним кліком перейти до 29↔30 або 34↔35).
+
+**NATIVE LIMITATION** →
+- Порівняння обмежене **однією і тією ж сторінкою** — не можна нативно порівняти дві РІЗНІ сторінки (крос-сторінкове порівняння). (https://community.atlassian.com/forums/Confluence-questions/Can-I-compare-different-pages-in-Confluence-Cloud/qaq-p/2081961, перевірено 2026-09-20)
+- Great для точкового порівняння вручну обраних версій; немає нативного bulk/масового порівняння версій по багатьох сторінках одразу (згадується як відкрите community-питання: "Confluence bulk page version compare", перевірено 2026-09-20, без офіційного рішення).
+
+**EXISTING MARKETPLACE SOLUTIONS** → жодна з знайдених apps не закриває навіть той вужчий (крос-сторінковий) job по-справжньому:
+| App | Vendor | Installs/Reviews/Rating | Що робить |
+|---|---|---|---|
+| [Diff for Confluence](https://marketplace.atlassian.com/apps/1273931748/diff-for-confluence) | Aptify Tech | 6 / 1 / 5.0 | Порівнює Git-патчі або вручну вставлений текст/код — НЕ версії реальної Confluence-сторінки і НЕ дві різні сторінки автоматично. |
+| [diff](https://marketplace.atlassian.com/apps/1233922/diff) | LN Software | 12 / 4 / 5.0 | Те саме — вручну вставлений текст/git-diff/patch-файли, не автоматичне порівняння live-сторінок. |
+
+(обидва перевірені 2026-09-20)
+
+**REAL UNMET JOB** → Буквальний запит `compare confluence page versions` (порівняння версій ОДНІЄЇ сторінки) **повністю закритий native functionality**, включно з довільними (не лише суміжними) версіями — це прямий збіг з правилом користувача: "Якщо literal customer job уже повністю закритий native functionality: KILLED. Без подальшого pain research." Ширший, окремий job — автоматичне крос-сторінкове порівняння (напр., порівняти сторінку з шаблоном, або дві споріднені сторінки в різних просторах) — нативно не підтримується і не вирішений жодним знайденим Marketplace app (обидва існуючі "diff"-apps вимагають ручного вставляння тексту, а не тягнуть live-контент сторінок). Це НЕ підтверджений wedge для буквального кандидата — лише зафіксований як інший, окремий job без будь-якого клієнтського доказу попиту (жодної скарги, review чи запиту, знайденого в цьому проході).
+
+**MINIMAL POSSIBLE WEDGE** → Немає — буквальний job вже вирішено native; крос-сторінковий job — інша, неперевірена гіпотеза без жодного клієнтського доказу.
+
+**SUPPORT RISK** → N/A (буквальний кандидат killed до стадії, де support risk мав би значення).
+
+**PLATFORM RISK** → N/A.
+
+**VERDICT: KILLED.**
+
+---
+
+### Підсумок Phase G
+
+| Кандидат | Verdict | Головна причина |
+|---|---|---|
+| `enforce definition of done jira` | **KILLED** | Native має лише basic single-field gating (Field Required Validator), не structured checklist — але саме цей gap вже щільно закритий Marketplace-конкурентами, включно з домінантним incumbent (HeroCoders, 7,887 installs), явно позиціонованим під DoD-enforcement. |
+| `prevent issue reopening jira` | **KILLED** | Native вичерпно вирішує "prevent/block": повне блокування, рестрикція за роллю/групою (навіть Team-managed), time-limit і умовний гейт (Company-managed), automation-based обхід для JSM-порталу. Залишкова "reopen-analytics" — інший job, вже зайнятий і нішевим (Reopening Counter), і великим генералістським (Timepiece, 4,477 installs) конкурентом. |
+| `compare confluence page versions` | **KILLED** | Буквальний job (порівняння будь-яких двох версій ОДНІЄЇ сторінки, з diff-підсвічуванням) повністю нативний, включно з довільними (не лише суміжними) версіями. Крос-сторінкове порівняння — окремий, неперевірений job без клієнтського доказу попиту. |
+
+**Усі 3 кандидати Phase F не пережили Native Capability Kill Test.** Жоден не був врятований штучним звуженням: у кожному випадку зафіксовано, що можлива вужча альтернатива (regulated-industry DoD templates; reopen-analytics; cross-page diff) є ОКРЕМИМ job-to-be-done без підтвердженого клієнтського попиту, а не прихованою версією дослідженого кандидата.
+
+**Explicitly not done in this phase:** жодного MVP, жодної архітектури, жодного числового скорингу, жодного pain/switching дослідження для будь-якого з 3 кандидатів (за прямою інструкцією — Phase G зупиняється на native+marketplace kill test).
+
 ## D. Candidate record
 
 Copy this block for each candidate query/wedge.
