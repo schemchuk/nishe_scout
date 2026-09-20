@@ -1063,6 +1063,204 @@ Classified against the four B1 criteria: (1) real marketplace demand, (2) paid a
 
 **Explicitly not done in this phase:** жодного вибору продукту, жодного MVP, жодної архітектури, жодного числового скорингу, жодного глибокого review-mining (окремі customer-quote докази — це наступна, ще не розпочата Pain/Switching фаза).
 
+## H. Phase I — Pain / Switching / Wedge Test (executed 2026-09-20)
+
+**Мета:** для кожного з 3 problem classes Phase H встановити не просто "чи є pain", а чи існує весь ланцюг: `recurring problem → identifiable buyer → existing paid behavior → reason to pay → viable small wedge`. Жодного нового keyword sweep, жодного повернення до вже KILLED intent (Phase E/G). Atlassian Marketplace — єдиний marketplace.
+
+**Методологічна примітка:** ціни знято через реальний рендерений браузер (Playwright), заповнюючи інтерактивний калькулятор "Number of users" значенням 100 — статичний HTML/WebFetch не показує ціни (JS-рендеринг, той самий факт, що й у Phase H).
+
+---
+
+### H1. Клас 1 — Orphaned digital artifacts after user/project lifecycle events (Jira)
+
+**1. Buyer** → **Jira Cloud site admin / IT ops, який виконує offboarding.** Не "business users" — підтверджено прямою самоідентифікацією у джерелах: Pete, Bob Bond, Hunter Lardy — усі описують себе як admin, що деактивує акаунти.
+
+**2. Trigger / frequency** → Event-driven (звільнення співробітника / реорганізація), виконується батчами. Nils Pohlmeier (2023-08-21, перевірено 2026-09-20): "about 400 of them...a bulk deletion would be the last piece" — вказує на накопичений backlog, тобто ремедіація відбувається періодично (не daily), радше monthly/quarterly-подібними хвилями офбордингу. Точна частота — `UNKNOWN`, лише характер підтверджений.
+
+**3. Current workaround** →
+- Manual reactivate+impersonate: офіційна відповідь Atlassian Team (Gabriele Franck, 2018-09-18): "the only way to claim ownership of private filters/boards is by reactivating this user and impersonating his/her account"
+- Script (ScriptRunner) — підтверджено НЕ працює для inactive users (Pete, 2018-09-18)
+- JQL `inactiveUsers()` — знаходить issues, але не виправляє filters/dashboards/project leads
+- Ignore — ймовірний default для більшості артефактів (нативно вони просто залишаються, доки користувача не видалено остаточно)
+
+**4. Economic / risk consequence** →
+- Admin workload підтверджено: ручний процес "one issue at a time" на сотні артефактів
+- Governance/compliance risk — Leticia Ovans (App-Central article, перевірено 2026-09-20): "orphaned work items appear actively owned in reports", "ownership reviews showed false confidence in accountability" — департаментальний ризик хибної звітності про accountability
+- Пряма historical willingness-to-pay цитата — Ian T Price (2019-01-31): **"you can do it but only if you spend another $1,000 on yet another plug-in"**
+
+**5. Existing paid behavior** →
+| App | Vendor | Price @100 users | Installs/Reviews | Реліз |
+|---|---|---|---|---|
+| [Orphaned-Owner Cleanup](https://marketplace.atlassian.com/apps/2038592087/orphaned-owner-cleanup) | Katabarwa Labs | USD 90.00/mo (0.90/user) | 0 / 0 | 2026-08-26 |
+| [Leaver Cleanup & Owner Reassignment for Jira](https://marketplace.atlassian.com/apps/1482306864/leaver-cleanup-owner-reassignment-for-jira) | Wayflare | USD 100.00/mo (1.00/user) | 0 / 0 | New |
+
+**Чесний висновок:** ціна встановлена (типова для ніші, $0.90-1.00/user/mo), але **жодної підтвердженої угоди немає** — 0 installs у обох. "Existing paid behavior" довести НЕ вдалось для цього exact job; є лише історичний непрямий доказ (цитата про $1,000 за суміжний плагін у 2019).
+
+**6. Pain evidence** — 14 datovaних цитат, 2018–2026 (community.atlassian.com, усі перевірено 2026-09-20):
+
+1. Pete (2018-09-18): "I have a number of users who are no longer with the organization... I cannot claim ownership of anything belonging to an inactive user."
+2. Lizzie_Rogers (2018-09-18) — робочий workaround через Shared filters
+3. Gabriele Franck, Atlassian Team (2018-09-18) — офіційне підтвердження gap (private filters = тільки impersonation)
+4. Amy Bailey (2019-08-27): "This is exactly what I was looking for. THANK YOU!" (рік потому, той самий thread)
+5. Bob Bond (2018-04-20): "we've got a ton of views that were created by users that are now inactive and I'm unable to find a way to delete the filters"
+6. Bob Bond (2018-04-23): "I believe I have admin privs...but there is no 'Delete' option"
+7. Linda Schmandt (2018-07-26): "I'm an admin, but I don't have a delete option for these filters"
+8. Isaac_nl (2019-01-07): "You cannot filter by owners that are inactive. You also cannot sort by owner"
+9. Susan S. (2019-06-05): "That doesn't seem to work for inactive users"
+10. Ian T Price (2019-01-31): "you can do it but only if you spend another $1,000 on yet another plug-in" — **WTP-сигнал**
+11. Nils Pohlmeier (2023-08-21): "about 400 of them...a bulk deletion would be the last piece"
+12. Ron Laws (2025-03-25): "Search box only shows results from active users...if user is deactivated, you're out of luck"
+13. Hunter Lardy (2025-03-19/24): "Before we bulk deactivate these accounts, what is the best way to ensure that any needed filters and dashboards are still available?"
+14. Leticia Ovans (App-Central article): "orphaned work items appear actively owned in reports"; "ownership reviews showed false confidence in accountability"
+
+Джерела: [qaq-p/779204](https://community.atlassian.com/forums/Jira-questions/Removing-filters-created-by-inactive-users-in-JIRA-Cloud/qaq-p/779204), [qaq-p/894313](https://community.atlassian.com/forums/Jira-questions/How-do-you-manage-filters-boards-and-dashboards-owned-by/qaq-p/894313), [qaq-p/2977137](https://community.atlassian.com/forums/Jira-questions/Bulk-deactivate-users-filters-and-dashboards/qaq-p/2977137), [td-p/3216473](https://community.atlassian.com/forums/Jira-Cloud-Admins-discussions/When-Jira-Swears-Your-quot-Owner-quot-Is-Active-But-They-re-Not/td-p/3216473) — усі перевірено 2026-09-20.
+
+**7. Native capability** → Підтверджено недостатня 7+ років поспіль (2018→2025 той самий gap): деактивація не видаляє і не дозволяє bulk-переприв'язати filters/dashboards/project leads; єдиний офіційний шлях для приватних об'єктів — reactivate+impersonate. Видалення (не деактивація) користувача прибирає dashboards, але лише після 60-денного Trash-вікна — і видалення втрачає audit-історію, тому більшість орг практикує деактивацію, не видалення.
+
+**8. Wedge test:**
+
+**Wedge 1A — "Departure sweep":** щоденний/по-запиту скан деактивованих users → work-queue з усіма filters/dashboards/issues/project-leads на кожного departed owner → bulk one-click reassignment на визначеного наступника + CSV-звіт для HR/compliance sign-off.
+- Problem: orphaned ownership after deactivation
+- Buyer: Jira Cloud site admin / IT ops
+- Trigger: event-driven, батчами (офбординг-цикли)
+- Current workaround: manual reactivate+impersonate по одному об'єкту
+- Existing paid alternative: обидва знайдені apps, ОСОБЛИВО **Leaver Cleanup & Owner Reassignment** — його власний опис вже буквально обіцяє "reassign a departed user's issues, filters, components and project leads", тобто буквально ту саму функцію
+- Unmet job: **вужчий, ніж здається** — найочевидніший кут (bulk reassignment) вже заявлений прямим конкурентом цього ж тижня. Залишковий диференціюючий кут — audit/compliance-evidence framing (не "зручність для IT", а "доказовий пакет для SOC2/GDPR data-retention, що підтверджує коректне закриття доступу"), або крос-продуктове охоплення (жоден з двох конкурентів не згадує Confluence-side ownership, лише Jira)
+- Why pay: підтверджений ручний tedium при масштабі (400+ об'єктів), governance-ризик хибної звітності, історичний WTP-сигнал
+- Why not native: 7+ років непокритий gap, офіційна рекомендація — ручний impersonation
+- Support burden: **MEDIUM** (bulk-переприв'язка ризикує помилковим призначенням; потрібен confirm/undo крок)
+- API/policy risk: LOW (внутрішні Jira REST/Forge дані, без зовнішніх залежностей)
+- Architecture Fit: HIGH (Forge-native, вже підтверджено 2 реальними 2026 apps)
+
+**Wedge 1B — Confluence-side extension (спекулятивний, НЕ підтверджений клієнтським доказом):** та сама логіка для Confluence page/space ownership. Жоден з 2 знайдених конкурентів цього не покриває. Але: жодної прямої клієнтської скарги саме про "деактивований page owner" в Confluence НЕ знайдено в цьому проході (лише загальна відсутність native "review date" концепції, що стосується Класу 3, не Класу 1). Позначається як `NEEDS EVIDENCE`, не рятує wedge штучно.
+
+**Support Gate:** `MEDIUM`
+
+**Verdict: NEEDS EVIDENCE.** Buyer підтверджений, native gap підтверджений 7-річною історією, economic case реальний (WTP-цитата + governance-ризик) — але (а) existing paid behavior НЕ доведено (0 installs у обох конкурентів), і (б) найочевидніший wedge-кут вже заявлений прямим конкурентом цього ж тижня, що звужує диференціацію. Не SURVIVES (бракує proof of payment), не KILLED (усі інші елементи ланцюга реальні).
+
+---
+
+### H2. Клас 2 — Issue-level data quality / hygiene drift after creation (Jira)
+
+**1. Buyer** → Розмито, порівняно з Класом 1 і 3: імовірно **Jira admin / PMO lead, відповідальний за точність звітності та надійність automation**, але жодного джерела з прямою самоідентифікацією ролі (на відміну від Класу 1 "I believe I have admin privs" чи Класу 3 "I am Knowledge Manager") не знайдено.
+
+**2. Trigger / frequency** → Змішано: частково event-driven (bulk import/API bypass валідаторів), частково continuous drift від звичайного використання. Частота ремедіації — `UNKNOWN`, ймовірно periodic (спринт/квартальний реview), не daily.
+
+**3. Current workaround** → Manual backlog grooming (bulk bulk-change-to-done за критерієм "no activity 90 days" — Michael Arndt, 2020-08-15), ad hoc JQL-запити, "scattered filters and automation rules" (за власним формулюванням SaaSJet-статті — тобто це ВЖЕ поточний workaround для більшості команд), ignore.
+
+**4. Economic / risk consequence** → Реальний, але непрямий: зламані звіти/дашборди ("Garbage in = garbage out" — Iryna Komarnitska/SaaSJet, 2025-06-04, vendor-authored, але теза підтверджена загальним визнанням у спільноті), зламана automation через порожні smart values (численні технічні community-треди), плутанина через дубльовані custom fields ("users start filling in the wrong 'Start Date' because three of them exist" — з офіційного Atlassian guide, Alex Radu, Principal Engineer, 2025-12-15). Жодного прямого compliance/audit-ризику, на відміну від Класу 1.
+
+**5. Existing paid behavior** →
+| App | Vendor | Price @100 users | Installs/Reviews |
+|---|---|---|---|
+| [Data Health for Jira](https://marketplace.atlassian.com/apps/2894502232/data-health-for-jira) | Samel ITS s.r.o. | USD 100.00/mo (1.00/user) | 1 / 0 |
+| [Data Quality Score for Jira](https://marketplace.atlassian.com/apps/345619035/data-quality-score-for-jira) | SysWisdom.ai | не показано | 0 / 0 |
+| [Issue Quality for Jira](https://marketplace.atlassian.com/apps/1237085/issue-quality-for-jira) | Effinomics | не показано | 3 / 0 |
+
+Три незалежні спроби — **жодної підтвердженої транзакції** (0-3 installs, 0 reviews у всіх трьох, тоді як суміжний Optimizer for Jira, що частково зачіпає "data quality issues" в контексті міграції, має 1,133 installs — але жоден з ЙОГО власних відгуків не називає причиною оплати саме issue-level data-quality drift; причини оплати за відгуками — health checks загалом, migration cleanup, consultant-аналіз).
+
+**6. Pain evidence** — 7 джерел, помітно слабше та більш непряме, ніж Клас 1/3, і кілька з них перетинаються з уже дослідженими темами (backlog hygiene, custom field bloat — REJECTed у Phase H):
+1. Michael Arndt (2020-08-15): "We stopped using Jira for a while and it became kind of stagnant... I need to clear out a bunch of old and unneeded issues. Several hundred."
+2. rhayje (2019-10-23/2019-11-05) — Kanban board clutter, workaround "isn't ideal having to toggle all the time"
+3. Iryna Komarnitska/SaaSJet (2025-06-04): "Garbage in = garbage out. That's the law of Jira reports" (vendor-authored)
+4. Alex Radu, Atlassian Principal Engineer (2025-12-15): "users start filling in the wrong 'Start Date' because three of them exist" (офіційний guide, але про config bloat, не issue-level drift як такий)
+5-7. Численні технічні треди про "automation rule returns empty value" — реальні, але це debugging-питання, не сформульована бізнес-скарга на "data quality" як категорію
+
+**7. Native capability** → Підтверджено: Field Required Validator спрацьовує лише в момент transition; немає нативного recurring re-scan існуючих issues. Gap реальний, але вужчий і менш болючий, ніж здавалось у Phase H.
+
+**8. Wedge test:**
+
+**Wedge 2A — "DoD drift monitor":** періодичний re-scan DONE/CLOSED issues за конфігурованими правилами (required fields не порожні, довжина опису, немає відкритих subtasks) → project-level score + список issues. Без gating transition (уникає HIGH support-risk патерну gating-apps з Phase F/G).
+- Unmet job: **фактично не унікальний** — це буквально те, що вже намагаються зробити всі 3 знайдені конкуренти незалежно, з нульовою тракцією кожен.
+
+**Wedge 2B — "Stale-issue nudge":** вужче — лише issues без оновлень N днів + порожнє обов'язкове поле → коментар/Slack-пінг assignee. Той самий макро-job, ще вужчий scope, та сама слабка диференціація.
+
+**Support Gate:** `LOW` (якщо суто звітність, без auto-fix)
+
+**Verdict: KILLED.** Не через native — native gap реальний, — а тому що одночасно ослаблені buyer (нечіткий), existing paid behavior (0 підтверджених транзакцій у 3 незалежних спробах), і reason to pay (непрямий, перетинається з уже REJECTed Custom field bloat і недослідженим backlog-hygiene). За правилом stop-condition (потрібні ВСІ елементи ланцюга одночасно) — цей клас не проходить поріг, і три однаково невдалі незалежні спроби тут читаються як слабкий, а не сильний сигнал (на відміну від Класу 1, де є хоч WTP-цитата і чіткий buyer).
+
+---
+
+### H3. Клас 3 — Confluence stale/outdated content detection & review cadence
+
+**1. Buyer** → **Найсильніший доказ ролі серед усіх 3 класів: пряма самоідентифікація.** Hank Church (2024-06-12): **"i am Knowledge Manager here, and want to set up notifications to go out to page owners once their content reaches the 'review date'"**. Додатково: Confluence space admin / documentation lead (Neal Verdick, Asvini Selvam, Mattias Kallvi).
+
+**2. Trigger / frequency** → Явно підтверджена, найчіткіша серед 3 класів: **періодична, адміном визначена частота** — Asvini Selvam (2025-01-03): "quarterly/monthly/yearly review".
+
+**3. Current workaround** →
+- Native Confluence Automation (Premium/Enterprise-only, підтверджено Phase H) — і навіть коли доступна, підтверджено недостатня: **одноразове** повідомлення за цикл, не persistent until confirmed (Asvini Selvam); немає bulk/digest — **"if you have just 50 expired pages, those will result in 50 separate emails"** (Trevor Angle, Atlassian, у треді Hank Church)
+- Native Content Manager "Last active" filter — пасивний, ручний, без proactive alerting (Mikhail "in Peru", 2026-09-08)
+- DIY custom automation — Brandi Guess: "I have an entire automation for this loop. AND I documented it in full"
+- Marketplace apps — Better Content Archiving, Breeze, Page Review Manager, Page Approval for Confluence — **рекомендуються повторно, незалежно, у щонайменше 3 різних community-тредах** (2023, 2024, 2025)
+
+**4. Economic / risk consequence** → Застарілий контент активно вводить в оману користувачів (мета оригінального запиту Neal Verdick — "eliminate stale and dead pages"); **email fatigue як системний ризик**: коли нагадування не масштабуються (50 окремих листів), реальні due-for-review сторінки тонуть у шумі й ігноруються — це ризик, що compliance/governance-процес review мовчки провалюється, а не просто незручність.
+
+**5. Existing paid behavior** → Пряма ніша тонка, але **суміжна категорія (Confluence content-governance/approval) доводить реальний, значний бюджет**:
+| App | Vendor | Installs/Reviews/Rating | Job |
+|---|---|---|---|
+| [Page Approval for Confluence](https://marketplace.atlassian.com/apps/144/page-approval-for-confluence) | Appfire | **1,700 / 73 / 3.4** | Approval/publish workflow (суміжний) |
+| [Approvals for Confluence](https://marketplace.atlassian.com/apps/1216387/approvals-for-confluence-page-review-sign-off) | AppFox | **983 / 21 / 4.4** | Page/section approval + audit trail (суміжний) |
+| [AURA Workflow & Approval](https://marketplace.atlassian.com/apps/1237745/aura-workflow-approval-for-confluence-page-publishing) | Aura Apps | 274 / 33 / 5.0 | Document lifecycle/ISO review (суміжний) |
+| [Stale Page Finder for Confluence](https://marketplace.atlassian.com/apps/284465269/stale-page-finder-for-confluence) | MiddleCore | USD 34.00/mo@100u — 3 / 0 | Пряма (staleness detection) |
+| [Evergreen — Stale Pages & Content Review](https://marketplace.atlassian.com/apps/1279909983/evergreen-stale-pages-content-review-for-confluence) | keelapps | 1 / 0 | Пряма, "owners confirm in one click" |
+| [Keep Docs Updated for Confluence](https://marketplace.atlassian.com/apps/1928918939/keep-docs-updated-for-confluence) | Aptify Tech | 4 / 0 | Пряма |
+
+Пряма staleness-ніша ще молода (0-4 installs), АЛЕ суміжна approval/governance-ніша має **983-1,700 installs** у лідерів — це найсильніший доказ реального paid-behavior серед усіх 3 класів: люди справді платять за Confluence content-governance tooling у значному масштабі, просто поки що переважно за "approval," не за "staleness" як окрему функцію.
+
+**6. Pain evidence** — 9 datovaних тверджень (2023–2026), включно з type-B switching signal:
+1. Neal Verdick (2023-05-04): "Is there a tool... that will show a report or alert for all pages that haven't been updated in over a year? I'd like to use this to trigger an internal review... to eliminate stale and dead pages"
+2. Aron Gombas (2023-05-18) — рекомендує сторонній app
+3. Adrian Hülsmann (2023-05-22) — рекомендує Breeze
+4. Dan Breyen (2023-05-04) — згадує Premium/Enterprise-обмеження native Automation
+5. Mikhail "in Peru" (2026-09-08) — деталь native Content Manager
+6. Tal Badehi (2024-07-17/18): "I am looking to receive regular reminders to review content in my documentation"
+7. Asvini Selvam (2025-01-03): "we need to have customized notification like notification should be triggered until page owner mark his confirmation" — точний опис unmet job
+8. Hank Church (2024-06-12): "i am Knowledge Manager here"; "He has about 10 of those, so he got 10 different emails"; "is there a way i can have just ONE email list ALL 10 pages" — **пряме формулювання unmet job (digest, не per-page email)**
+9. Trevor Angle, Atlassian (у тому ж треді): "if you have just 50 expired pages, those will result in 50 separate emails" — офіційне підтвердження native-обмеження
+10. Mattias Kallvi (2025-11-04/06): "I wonder if it's possible to set properties to a page like: Page Owner, Review date"; "It was a great post but it doesn't really meet all my needs. I think we need to go with some plugin to achieve our goal" — **type-B switching signal (comparison-shopping → рішення йти до стороннього app)**
+
+Джерела: [qaq-p/2350603](https://community.atlassian.com/forums/Confluence-questions/Alert-report-to-display-Confluence-pages-over-a-year-old/qaq-p/2350603), [qaq-p/2757314](https://community.atlassian.com/forums/Confluence-questions/Scheduling-reminders-to-review-page-content/qaq-p/2757314), [qaq-p/2906433](https://community.atlassian.com/forums/Confluence-questions/Document-Review-Reminder/qaq-p/2906433), [qaq-p/2725178](https://community.atlassian.com/forums/Confluence-questions/Creating-quot-please-review-your-content-quot-notifications-to/qaq-p/2725178), [qaq-p/3140789](https://community.atlassian.com/forums/Confluence-questions/Page-Owner-and-Review-date-on-Conflunce-page/qaq-p/3140789) — усі перевірено 2026-09-20.
+
+**7. Native capability** → Точно підтверджений, вузько окреслений gap: (а) tier-gating — Automation лише Premium/Enterprise; (б) навіть на Premium/Enterprise — одноразове, не persistent-until-confirmed повідомлення; (в) немає bulk/digest (N сторінок = N окремих листів); (г) **немає "review date" як native властивості взагалі** — прямо підтверджено (Aron Gombas, 2025-11-05: "there is no 'review date' available using the built-in features").
+
+**8. Wedge test:**
+
+**Wedge 3A — "Review cadence digest":** Forge-app, що додає кожній сторінці/дереву сторінок властивості Owner + Review Date (яких немає нативно), надсилає ОДИН консолідований digest на власника за цикл (вирішує буквально скаргу "50 окремих листів"), з persistent-нагадуванням до explicit confirm, працює на Free/Standard tier (не Premium/Enterprise-gated, на відміну від native).
+- Buyer: Knowledge Manager / Confluence space admin
+- Trigger: періодичний (monthly/quarterly/yearly, admin-configured)
+- Current workaround: native Automation (обмежена) + DIY-скрипти + шопінг серед платних apps
+- Existing paid alternative: Stale Page Finder, Evergreen, Keep Docs Updated, Page Review Manager — жоден з описів прямо НЕ підтверджує "один digest на власника" (Evergreen найближче — "owners confirm in one click", але це per-page confirm, не обов'язково per-owner digest) — залишковий unmet job ймовірний, але не 100% підтверджений на рівні кожного окремого конкурента
+- Why pay: суміжна approval-категорія доводить реальний бюджет (983-1,700 installs); Knowledge managers explicitно йшли шукати платні apps, коли native не впорався (Hank Church, Mattias Kallvi)
+- Why not native: 3 конкретні, незалежно підтверджені gaps (tier-gating, one-shot notification, відсутність digest)
+- Support burden: **LOW-MEDIUM** (read/notify-only, немає деструктивних bulk-дій — безпечніше за Клас 1)
+- API/policy risk: LOW (внутрішній Confluence content API)
+- Architecture Fit: HIGH (Forge-native, вже прецедент у 4 малих apps)
+
+**Wedge 3B — "Freshness badge" (мінімальніший варіант):** лише видимий page-level бейдж "Останній суттєвий перегляд: N днів тому / OVERDUE" + space-wide звіт, без системи сповіщень взагалі. Нижча технічна складність, але слабший economic case (немає proactive push).
+
+**Support Gate:** `LOW`
+
+**Verdict: SURVIVES.** Усі елементи ланцюга одночасно присутні: confirmed buyer (пряма самоідентифікація "Knowledge Manager") + recurring/relevant problem (явна quarterly/monthly/yearly каденція) + existing paid behavior (983-1,700 installs у суміжній категорії, доводить реальний бюджет) + credible reason to pay (email fatigue як governance-ризик, explicit switching-до-плагіна поведінка) + native gap (3 незалежно підтверджені обмеження) + LOW support burden + viable solo wedge (digest + Free/Standard-доступність — кут, не заявлений явно жодним з 4 існуючих малих конкурентів).
+
+---
+
+### H4. Підсумок Phase I
+
+| Клас | Verdict | Причина |
+|---|---|---|
+| 1. Orphaned digital artifacts (Jira) | **NEEDS EVIDENCE** | Buyer + native gap + economic case реальні, але 0 підтверджених транзакцій і найочевидніший wedge-кут вже заявлений прямим конкурентом |
+| 2. Issue-level data quality drift (Jira) | **KILLED** | Buyer розмитий, pain evidence непрямий і перетинається з уже REJECTed/недослідженими темами, 0 транзакцій у 3 незалежних спробах |
+| 3. Confluence stale content & review cadence | **SURVIVES** | Усі елементи ланцюга (buyer, recurring problem, paid behavior, reason to pay, native gap, LOW support, viable wedge) підтверджені одночасно |
+
+**Stop condition НЕ спрацював:** Клас 3 проходить усі критерії одночасно, тому висновок `ATLASSIAN WEDGE SEARCH FAILED` НЕ застосовується. Немає потреби вигадувати четвертий wedge чи рятувати Клас 2.
+
+**Фінальні максимум 2 concrete wedges, що переносяться далі:**
+
+1. **Confluence Review Cadence Digest** (Клас 3, Wedge 3A) — головний кандидат
+2. **Jira Departure Sweep / Orphaned-Ownership Cleanup** (Клас 1, Wedge 1A) — другий кандидат, статус NEEDS EVIDENCE, потребує підтвердження реальної оплати (жоден з 2 прямих конкурентів ще не має installs) перш ніж просуватись далі
+
+**Explicitly not done in this phase:** жодного вибору winner за числовим скорингом, жодного коду, жодного MVP, жодної architecture, жодного нового keyword sweep.
+
 ## D. Candidate record
 
 Copy this block for each candidate query/wedge.
