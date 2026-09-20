@@ -945,6 +945,124 @@ Classified against the four B1 criteria: (1) real marketplace demand, (2) paid a
 
 **Explicitly not done in this phase:** жодного MVP, жодної архітектури, жодного числового скорингу, жодного pain/switching дослідження для будь-якого з 3 кандидатів (за прямою інструкцією — Phase G зупиняється на native+marketplace kill test).
 
+## G. Phase H — Operational Pain Discovery (executed 2026-09-20)
+
+**Мета:** не шукати ще один buzzword-keyword, а знайти класи проблем, що виникають у ВЖЕ ПРАЦЮЮЧИХ Jira/Confluence installations: `existing system → recurring operational problem → user needs detection/control/cleanup → possible small product`. Джерело — реальні нові/малі Marketplace apps (2026 release, low/moderate installs), не абстрактні припущення.
+
+**Методологічна примітка (чесно задокументовано):** перша спроба виконати search-test через прямий `WebFetch` на `marketplace.atlassian.com/search?query=...` дала **ідентичні 8 результатів для 5 абсолютно різних запитів** (перевірено через `curl` — сторінка видає однаковий 472,865-байтний статичний HTML-каркас незалежно від query, бо результати рендеряться client-side через JS). Це означає, що ранній прохід WebFetch **не був реальними даними** — ймовірно, галюцинація малої моделі підсумовування. Виявивши це, всі search-test запити в цій фазі перевиконані через реальний браузер (Playwright MCP, снапшот accessibility-дерева після повного рендерингу), що дало коректні, відмінні один від одного результати для кожного запиту. Це задокументовано, щоб зафіксувати урок: `marketplace.atlassian.com/search` вимагає JS-рендерингу, WebFetch на ньому ненадійний.
+
+### G1. Перший прохід — 10 problem classes з реальним Marketplace evidence
+
+| # | Problem class | Example app(s) / evidence | Native capability | Marketplace saturation | Initial status |
+|---|---|---|---|---|---|
+| 1 | **Orphaned digital artifacts after user/project lifecycle events** (filters, dashboards, issues, project leads, boards, still "owned" by deactivated users or orphaned after project archive) | [Orphaned-Owner Cleanup](https://marketplace.atlassian.com/apps/2038592087/orphaned-owner-cleanup) (Katabarwa Labs, released 2026-08-26, 0 reviews); [Leaver Cleanup & Owner Reassignment for Jira](https://marketplace.atlassian.com/apps/1482306864/leaver-cleanup-owner-reassignment-for-jira) (Wayflare, 0 reviews) — обидва Forge-native, майже ідентичний job | Atlassian сама визнає проблему нативно невирішеною: офіційна KB-стаття [Delete orphaned boards not linked to projects or inactive user accounts in Jira Cloud](https://support.atlassian.com/jira/kb/delete-orphaned-boards-not-linked-to-projects-or-inactive-user-accounts-in/) (перевірено 2026-09-20) описує лише ручний/API-based workaround, не UI-фічу | НИЗЬКА — лише 2 прямі конкуренти, обидва щойно з'явились, 0 installs/reviews у обох | **PROMISING** |
+| 2 | **Configuration change audit trail (before/after diff, admin-change attribution)** | [Config Audit for Jira](https://marketplace.atlassian.com/apps/1460536854/config-audit-for-jira) (Larchmont Labs, 1 install); [Permissions Changes Audit for Jira](https://marketplace.atlassian.com/apps/2928177100/permissions-changes-audit-for-jira) та [Workflow Changes Audit for Jira](https://marketplace.atlassian.com/apps/2538728805/workflow-changes-audit-for-jira) (обидва Shtern Consulting OÜ, реліз березень/квітень 2026); [ConfigMonitor](https://marketplace.atlassian.com/apps/1512782585/configmonitor-configuration-audit-log-history-for-jira), [Sphior Ledger](https://marketplace.atlassian.com/apps/4197217154/sphior-ledger-for-jira-config-audit-log-change-history), [Config Watch](https://marketplace.atlassian.com/apps/873272868/config-watch-for-jira), [Audit 360](https://marketplace.atlassian.com/apps/1890268521/audit-360-for-jira), [Advanced Audit Log for Jira](https://marketplace.atlassian.com/apps/1238230/advanced-audit-log-for-jira) | Підтверджено прямо вендорами: "Jira's native audit log can't tell you which admin changed a scheme, and it keeps no before/after history" (Config Audit listing, перевірено 2026-09-20); ретеншн нативного audit log обмежений (community: "audit log only goes back 180 days") | ДУЖЕ ВИСОКА — **12+ незалежних конкурентів** знайдено одним пошуком, більшість 2026-vintage, 1-20 installs; є 2 середні гравці одного вендора (Doctor Pro 186, Doctor Governed 165) і 1 великий гравець (Configuration Manager for Jira/CMJ, Appfire, 4.4k installs), але CMJ вирішує ІНШИЙ job (config deployment/migration між середовищами, не audit trail) | **PROMISING, але дуже конкурентний** |
+| 3 | **Access/permission review & certification** ("хто має доступ і чому", risk-flagging) | [Access Review for Jira](https://marketplace.atlassian.com/apps/2749172492/access-review-for-jira) (Flow Time Apps, 1 install); [AccessLens](https://marketplace.atlassian.com/apps/4182244448/accesslens-permission-audit-access-review-for-jira) (keelapps); [Access Evidence](https://marketplace.atlassian.com/apps/2440052505/access-evidence-access-reviews-audit-evidence-for-jira); [Access Review & Audit Trail for Jira](https://marketplace.atlassian.com/apps/147263462/access-review-audit-trail-for-jira) (DVLS Labs, явно пише "beyond Jira's 180-day log"); [AuditAdmin](https://marketplace.atlassian.com/apps/1235391/auditadmin-for-jira-access-users-groups-roles-access) (10 installs) | Немає нативного консолідованого "access path + risk flags" звіту (deactivated-user-with-access, excessive admins, empty groups) | ДУЖЕ ВИСОКА — **10+ прямих конкурентів**; це та сама макро-ніша, що вже досліджена в Phase C (`user access review`, NEEDS EVIDENCE, Multiplier 177 installs — ширший IGA-продукт) — тепер підтверджено ще щільніше населеною свіжими 2026-ентрантами | **PROMISING, але re-opens вже неоднозначну нішу — не свіже відкриття** |
+| 4 | **Issue-level data quality / hygiene drift after creation** | [Data Health for Jira](https://marketplace.atlassian.com/apps/2894502232/data-health-for-jira) (Samel ITS s.r.o., 1 install); [Data Quality Score for Jira](https://marketplace.atlassian.com/apps/345619035/data-quality-score-for-jira) (SysWisdom.ai, 0 reviews); [Issue Quality for Jira](https://marketplace.atlassian.com/apps/1237085/issue-quality-for-jira) (Effinomics, 3 installs) | Field Required Validator спрацьовує лише В МОМЕНТ transition; немає нативного періодичного пере-сканування ІСНУЮЮЧИХ issues на предмет "дрейфу" (поле спорожнене bulk-edit/API, issue не оновлювався N днів) | НИЗЬКА-ПОМІРНА — 3 незалежні свіжі конкуренти, жоден не домінує | **PROMISING** |
+| 5 | **Custom field / instance configuration bloat cleanup** | [Optimizer for Jira](https://marketplace.atlassian.com/apps/1217194/optimizer-for-jira-health-checks-cleanup) (AppFox, **1,133 installs/33 reviews/4.6**); [Doctor Pro](https://marketplace.atlassian.com/apps/1231705/doctor-pro-audit-optimize-manage-configuration-for-jira) (AppForge.ai, 186/10/5.0) | Jira Cloud має нативний **Site optimizer**, але підтверджено доступний лише на **Enterprise/Premium** планах | ВИСОКА — домінантний, добре оцінений incumbent (1,133 installs) | **REJECT** (насичено; нативна фіча покриває топові плани; це також корегує Phase F: "нуль конкурентів" для `find unused custom fields jira` був артефактом вузького keyword-пошуку, а не реальною порожньою нішею) |
+| 6 | **Confluence stale/outdated content detection & review cadence** | [Stale Page Finder for Confluence](https://marketplace.atlassian.com/apps/284465269/stale-page-finder-for-confluence) (MiddleCore, 3 installs); [Evergreen — Stale Pages & Content Review](https://marketplace.atlassian.com/apps/1279909983/evergreen-stale-pages-content-review-for-confluence) (keelapps, 1 install); [Keep Docs Updated for Confluence](https://marketplace.atlassian.com/apps/1928918939/keep-docs-updated-for-confluence) (Aptify Tech, 4 installs); [Page Review Manager for Confluence](https://marketplace.atlassian.com/apps/2847619197/page-review-manager-for-confluence) | Confluence Automation (яка могла б слати "review your content" нагадування) підтверджено доступна лише на **Premium/Enterprise** планах; Free/Standard немає жодного нативного review-date/owner механізму | НИЗЬКА-ПОМІРНА — 3-4 свіжі конкуренти; попередній incumbent **Outdated for Confluence" — АРХІВОВАНИЙ** (вендор вийшов з ринку, конкуренція фактично зменшилась) | **PROMISING** |
+| 7 | **Confluence broken links / orphaned attachments detection** | [Broken Links+ for Confluence](https://marketplace.atlassian.com/apps/1223326/broken-links-for-confluence) (Apps+, Gold Partner, **147 installs/3 reviews/5.0**); Easy Link Checker; Link Management; Link Error Report | Підтверджено відсутність нативного механізму: офіційний, досі відкритий feature request [CONFCLOUD-16577 "Ability to detect unused attachments"](https://jira.atlassian.com/browse/CONFCLOUD-16577) — не реалізовано | ПОМІРНА — присутній середній Gold-partner incumbent з 24/7 підтримкою | **WEAK** (реальний нативний gap підтверджений власним фіча-реквестом Atlassian, але вже є небідний конкурент з довірою/партнерським статусом — високий бар'єр для соло-ентранта) |
+| 8 | **Automation rule silent-failure / stopped-rule monitoring** | Прямий доказ болю: Atlassian Community — ["How do you find out when a Jira automation rule has silently stopped running?"](https://community.atlassian.com/forums/Jira-Cloud-Admins-discussions/How-do-you-find-out-when-a-Jira-automation-rule-has-silently/td-p/3278249) (перевірено 2026-09-20) | Native Automation Queue Health Check покриває лише queue-backlog, не "ця конкретна rule тихо перестала спрацьовувати" | НЕВІДОМА — жодного чітко верифікованого, зараз активного, спеціалізованого Marketplace app для цього exact job не знайдено в цьому проході (PULSE, Almarise, 12 installs, — це generic infrastructure/network monitoring, явно НЕ про Jira automation rules) | **NEEDS EVIDENCE** (реальний біль підтверджений, конкурент — ні; чесно не фабрикується) |
+| 9 | **License / inactive-user cost audit specifically for Jira Cloud** | User Auditor for Jira (Akeles Consulting) — підтверджено **Server/Data Center only** (сумісність: Jira Server 9.4-10.7, DC 11.0-11.3), НЕ Cloud; License Monitoring for Jira — підтверджено legacy/Server-focused, "no longer offer sales and support for server apps" | Немає верифікованого нативного Cloud-механізму для "recover unused licenses across Jira+Confluence+JSM" на рівні деталізації third-party server-інструментів | НЕВІДОМА для Cloud конкретно — обидва знайдені приклади не є Cloud-додатками | **NEEDS EVIDENCE** (реальний біль підтверджений зовнішніми джерелами — блоги/community про Marketplace app spend — але не знайдено жодного чинного Cloud-специфічного конкурента в цьому проході) |
+| 10 | **Marketplace app usage/spend audit** (які встановлені apps реально використовуються) | Жодного прямого Marketplace app не знайдено в цьому проході. Реальний біль підтверджений: community-питання ["How do Jira admins currently track which Marketplace apps are actually being used?"](https://community.atlassian.com/forums/Jira-questions/How-do-Jira-admins-currently-track-which-Marketplace-apps-are/qaq-p/3265165) + зовнішні блоги про app-spend waste (перевірено 2026-09-20) | Atlassian надає лише базовий список встановлених apps + білінг, без usage-аналітики per app | **НУЛЬ конкурентів** — за проєктним правилом, це НЕ автоматично "відкрита ніша": може означати або справжню порожнечу, або (більш ймовірно тут) незручну позицію продукту "app, що аудитує інші apps" всередині тієї ж платформи | **NEEDS EVIDENCE** (нуль конкурентів явно НЕ інтерпретується як доказ хорошої ніші, за прямим правилом проекту) |
+
+**Чому саме 10, а не 15:** дослідження зупинилось на 10 класах з реальним, перевіреним Marketplace evidence замість штучного розтягування до 15 слабо підтвердженими напрямками (напр. sprint/board hygiene, notification/webhook failure monitoring — обидва досліджувались, але жодного релевантного dedicated app чи чіткого customer-pain джерела не знайдено в цьому проході, тому вони не включені як окремі класи). Це відповідає правилу AGENTS.md §2 (не вигадувати докази).
+
+### G2. Друге звуження (10 → 5 для search-test)
+
+Обрано максимум 5 класів зі статусом `PROMISING` для короткого search-test, за критерієм: підтверджений native gap + підтверджений реальний конкурентний рух (не нуль, не один домінант) + не REJECT за saturation:
+
+1. Orphaned digital artifacts after user/project lifecycle events
+2. Configuration change audit trail (before/after diff)
+3. Access/permission review & certification
+4. Issue-level data quality / hygiene drift
+5. Confluence stale/outdated content detection & review cadence
+
+(Класи 7-10 залишені задокументованими, але не переносяться у search-test: #7 WEAK через наявність небідного incumbent, #8/#9/#10 NEEDS EVIDENCE через непідтверджену пряму конкуренцію — просування будь-якого з них далі без верифікованого конкурента порушило б правило "не вигадуй докази".)
+
+### G3. Search-test для 5 обраних класів (Playwright, реальний рендеринг, перевірено 2026-09-20)
+
+**Метод:** для кожного класу виконано 1-2 реальні customer-intent запити напряму на `marketplace.atlassian.com/search?hosting=cloud` через рендерений браузер (не WebFetch — див. методологічну примітку вище). Записано перші релевантні (не noise) результати, installs, reviews, рейтинг, чи є "New"/Rising Star позначення.
+
+**1. `orphaned owner jira`** (клас 1) — прямі результати серед перших 3 позицій пошуку:
+| App | Vendor | Installs/Reviews/Rating | Badge |
+|---|---|---|---|
+| Orphaned-Owner Cleanup | Katabarwa Labs | 0 / 0 / — | Runs on Atlassian, реліз 2026-08-26 |
+| Leaver Cleanup & Owner Reassignment for Jira | Wayflare | 0 / 0 / — | Runs on Atlassian |
+
+Обидва — по суті ІДЕНТИЧНИЙ job ("reassign a departed user's issues, filters, components and project leads — and export closure evidence" vs. "find every filter, dashboard, issue, and project lead left behind by deactivated users"). Далі в результатах — тільки нерелевантний шум (ScriptRunner 34.8k, Xray 25.3k тощо — платформа завжди показує "over 1,000 matches", нерелевантно per Phase F methodology).
+
+**2. `config audit jira`** (клас 2) — знайдено **13 прямих релевантних результатів** на першій сторінці (нетипово багато для щойно відкритої ніші):
+| App | Vendor | Installs/Reviews/Rating |
+|---|---|---|
+| Config Audit for Jira | Larchmont Labs | 1 / 0 / — |
+| Doctor Pro | AppForge.ai | 186 / 10 / 5.0 |
+| User Activity Audit Log | Twinit | 226 / 5 / 5.0 |
+| Doctor Governed | AppForge.ai | 165 / 4 / 5.0 |
+| Config Insights for Jira | Simitech Ltd. | 6 / 0 / — |
+| Advanced Audit Log for Jira | SaaSJet Studios | 20 / 0 / — |
+| ConfigMonitor | Macon Apps | 2 / 1 / 5.0 |
+| Sphior Ledger for Jira | SPHIOR | 1 / 0 / — |
+| Audit 360 for Jira | A360A Consulting | 5 / 0 / — |
+| Config Watch for Jira | NarrowForge | новий, installs не показано |
+| Configuration Monitor — Project Audit Log | Numeric Oasis | 7 / 0 / — |
+| Healthchecks (Monitor/Audit/Cleanup/Optimize) | Idalko | 10 / 0 / — |
+| Config Compare for Jira | SparkMind AI | 1 / 0 / — |
+| Permission Audit for Jira | triangle-tech | 1 / 0 / — |
+| Configuration Manager for Jira (CMJ) | Appfire | **4.4k / 145 / 4.6** (інший job — deployment, не audit) |
+
+**3. `access review jira`** (клас 3) — знайдено **10 прямих релевантних результатів**:
+| App | Vendor | Installs/Reviews/Rating |
+|---|---|---|
+| Access Review for Jira | Flow Time Apps | 1 / 0 / — |
+| Project Access Review for Jira Cloud | Akeles Consulting | 46 / 1 / 5.0 |
+| Access Reviewer360 | miniOrange | 12 / 0 / — |
+| AuditAdmin for Jira | MOY Apps | 10 / 2 / 5.0 |
+| AccessLens | keelapps | 1 / 0 / — |
+| Access Evidence | ArdSaor | 1 / 0 / — |
+| Automate Access Request & Review (AWS/Entra/Okta) | miniOrange | 8 / 0 / — |
+| User Access Review for Jira (Permissions & Audit) | Ballon Apps | новий, installs не показано |
+| Access Review & Audit Trail for Jira | DVLS Labs | новий, явно пише "beyond Jira's 180-day log" |
+| Multiplier — Access Management & IGA | Multiplier | 177 / 19 / 5.0 (ширший IGA-продукт, вже відомий з Phase C) |
+
+**4. `data quality jira`** (клас 4) — прямі результати (решта — шум: external-data конектори, backup apps, GDPR/PII apps не по темі):
+| App | Vendor | Installs/Reviews/Rating |
+|---|---|---|
+| Data Quality Score for Jira | SysWisdom.ai | новий, installs не показано |
+| Issue Quality for Jira | Effinomics | 3 / 0 / — |
+
+(+ Data Health for Jira, Samel ITS, 1 install — знайдений раніше напряму, не в топі цього конкретного запиту, але той самий клас)
+
+**5. `stale pages confluence`** (клас 6) — прямі результати (решта — page approval/formatting apps, суміжний, але інший job):
+| App | Vendor | Installs/Reviews/Rating |
+|---|---|---|
+| Stale Page Finder for Confluence | MiddleCore | 3 / 0 / — |
+| Evergreen — Stale Pages & Content Review | keelapps | 1 / 0 / — |
+
+(+ Keep Docs Updated, Aptify Tech, 4 installs — знайдений раніше, той самий клас)
+
+**Цікавий крос-паттерн:** вендор **keelapps** з'явився у ДВОХ різних класах (AccessLens — клас 3, Evergreen — клас 6), а **Shtern Consulting OÜ** — з двома окремими apps у класі 2 (Permissions Changes Audit, Workflow Changes Audit), а **AppForge.ai** — з двома apps у класі 2 (Doctor Pro, Doctor Governed). Це вказує на портфельну стратегію кількох малих вендорів: замість одного великого продукту — кілька вузьких apps під один макро-тренд "governance/hygiene для існуючих Atlassian-інсталяцій". Це підсилює висновок, що макро-тема реальна, але також означає, що конкуренція в класах 2 і 3 зростає ШВИДШЕ, ніж у класах 1, 4, 6.
+
+### G4. Фінальне звуження (5 → 3)
+
+**Правило застосоване:** не "більше конкурентів = гірше" механічно, а баланс (підтверджений native gap) + (реальний, але НЕ перенасичений рух конкурентів) + (клас ще не був вичерпно досліджений у попередніх фазах).
+
+| Клас | Кількість прямих конкурентів | Native gap підтверджено | Раніше досліджувався? | Рішення |
+|---|---|---|---|---|
+| 1. Orphaned lifecycle artifacts | 2 | Так (офіційна Atlassian KB) | Ні, свіжа тема | **НЕСЕ ДАЛІ** |
+| 2. Config change audit trail | 13 | Так (vendor + community) | Ні, свіжа тема, але вже дуже щільна | **НЕ несе далі** — занадто перенаселено (13 майже ідентичних свіжих конкурентів за ~6 місяців — вищий бар'єр диференціації, ніж у класів 1/4/6, навіть без одного домінантного гравця) |
+| 3. Access review & certification | 10 | Так | **Так** — та сама макро-ніша з Phase C (`user access review`, NEEDS EVIDENCE) | **НЕ несе далі** — і перенаселено, і не є новим відкриттям; повторне відкриття вже неоднозначної теми без нового unmet job |
+| 4. Issue-level data quality drift | 3 | Так | Ні, свіжа тема | **НЕСЕ ДАЛІ** |
+| 6. Confluence stale content | 3-4 (з них 1 incumbent архівований, вийшов з ринку) | Так (tier-gating) | Частково суміжно з Phase C `confluence page views analytics` (HOLD) — але інший job (staleness, не analytics) | **НЕСЕ ДАЛІ** |
+
+**Фінальні 3 problem classes для наступного Pain/Switching дослідження:**
+
+1. **Orphaned digital artifacts after user/project lifecycle events** (Jira) — reassignment/cleanup роботи, залишеної деактивованими користувачами або архівованими проєктами.
+2. **Issue-level data quality / hygiene drift after creation** (Jira) — періодичний re-scan існуючих issues на предмет дрейфу якості даних, а не лише gate в момент transition.
+3. **Confluence stale/outdated content detection & review cadence** — виявлення застарілого контенту та цикл підтвердження власником, окремо від page-version-порівняння (яке вже KILLED у Phase G).
+
+**Explicitly not done in this phase:** жодного вибору продукту, жодного MVP, жодної архітектури, жодного числового скорингу, жодного глибокого review-mining (окремі customer-quote докази — це наступна, ще не розпочата Pain/Switching фаза).
+
 ## D. Candidate record
 
 Copy this block for each candidate query/wedge.
