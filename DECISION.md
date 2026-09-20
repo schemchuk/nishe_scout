@@ -112,15 +112,35 @@ Full evidence (per-quote table: exact quote, app, date, URL, pain category, freq
 
 **Explicitly not done in this phase:** no product selected, no MVP designed, no numerical scoring used, no intent marked PASS based on complaint volume, no competitor weakness treated as proof of our own demand.
 
+**Note on switching-evidence methodology (added 2026-09-19):** per user instruction, the absence of a literal "switched from X to Y" quote is no longer treated as an automatic fail. Switching evidence is now classified as: **A** — direct replacement, **B** — comparison-shopping, **C** — replacement intent, **D** — pain only. Retroactively applied to Phase D: Anne Dietz (HubSpot/Getint) = B; Craig Parsons / Thilini Rathnayake = weak/implicit B; Andy Gladstone / Natalie Dolce (confluence-analytics, switching from native tooling) = A, but against a "no tool" baseline rather than a competitor; most other quotes = D (pain only). Full detail in RESEARCH.md.
+
+## 0.8 Phase E Output — Wedge Kill Test (2026-09-19)
+
+Full evidence (competitor-by-competitor feature comparison, sourced and dated) is in `RESEARCH.md` under "E. Phase E — Wedge Kill Test". This section records only the outcome. **`confluence page views analytics` is moved to `HOLD`** per instruction — not researched further until a concrete unmet job is found; no research budget spent on it in this phase.
+
+**Method:** for each of the 2 active Phase D hypotheses, checked 7–8 existing Marketplace apps for exact feature overlap, not just competitor existence — the explicit goal was to try to kill each hypothesis, not confirm it.
+
+**Hypothesis 1 — GDPR/Confluence bulk PII classification: `KILLED`**
+
+The literal job is already delivered, with active development, by at least 3 independent competitors: AppFox's Compliance for Confluence (CQL-scoped bulk classification, default classification, publish-time enforcement — shipped in direct response to the exact feature request found in Phase D), Actonic's Data Protection Toolkit (scheduled recurring scans with auto-redaction), and Polymetis's PII Protection and DLP for Confluence (space-level scan → classify → Confluence/Jira Automation trigger, SOC 2 Type II certified). A 4th (miniOrange's Data-PII-Scanner) explicitly lists scheduled/bulk scanning as "coming up," confirming the market is actively converging on this exact feature. Per direct instruction, a feature already offered by competitors cannot be called a wedge. One unverified, speculative alternative shape surfaced — a one-time "legacy cleanup" tool/engagement instead of a recurring compliance subscription — but zero customer evidence supports it; it is not a confirmed hypothesis, only a noted gap in how the category is currently packaged.
+
+**Hypothesis 2 — HubSpot↔Jira reliable field-type sync: `KILLED`**
+
+Checked 7 direct competitors plus HubSpot's own native, free Jira integration. Every possible narrow configuration is already occupied by a live, funded competitor: full two-way sync (Getint), configurable two-way/one-way/display-only (Korvex), read-only CRM-context display (Appsvio), embed + automation-trigger without full sync (resolution — a first-version app that already has 490 installs/11 reviews, itself a notable adjacent data point), and an enterprise no-code external option with explicit conflict/retry handling (OpsHub). The evidenced pain (missing multi-select/date field types, Phase D) turned out to be part of a systemic, cross-platform technical-debt pattern in Getint's whole multi-connector business (confirmed via their Sep 2026 changelog fixing equivalent field-handling bugs in Asana, ClickUp, and Freshservice connectors too) — an execution-quality gap the vendor is actively closing, not an unaddressed job. Per instruction not to propose a full two-way integration, every viable narrower slice (read-only, display-only, embed-trigger) was checked and found already occupied.
+
+**Result: both active hypotheses killed. No live wedge candidate remains among the 3 intents researched in Phase C/D.** Per AGENTS.md §5 (Veto rules: "Wedge = veto"), this is not compensated by the real demand evidence found in Phase C or the volume of positive reviews found in Phase D — a missing wedge stops progress toward BUILD regardless of other positives. Neither hypothesis was designed into an MVP or architecture; both stopped at the hypothesis stage as instructed.
+
+**Explicitly not done in this phase:** no MVP designed, no architecture designed, no coding started, no winner chosen by scoring.
+
 ## 1. Target
 
 **Marketplace:** Atlassian Marketplace (selected for Phase B deep research — see Section 0; not yet a BUILD target)
 
-**Exact customer query / intent:** narrowed to 3 candidates in Phase C (see Section 0.6): `gdpr compliance confluence`, `confluence page views analytics`, `hubspot integration jira`. Phase D (see Section 0.7) narrowed further to 2 specific pain/wedge hypotheses (bulk PII classification for GDPR/Confluence; reliable field-type sync for HubSpot↔Jira) — neither yet confirmed via Phase E (wedge) or selected as a product.
+**Exact customer query / intent:** narrowed to 3 candidates in Phase C (see Section 0.6): `gdpr compliance confluence`, `hubspot integration jira` (both wedge-tested and killed in Phase E, see Section 0.8), and `confluence page views analytics` (moved to `HOLD` per instruction — not researched further until a concrete unmet job is identified).
 
-**Candidate product:** not chosen — 2 pain/wedge hypotheses under consideration (see Section 0.7), no product selected
+**Candidate product:** none — both Phase D wedge hypotheses were killed in Phase E (see Section 0.8); no live candidate remains among the 3 researched intents
 
-**One-sentence wedge:** not yet confirmed — Phase E
+**One-sentence wedge:** none survives — both tested hypotheses were killed because the exact job is already served by multiple active competitors (see Section 0.8)
 
 ## 2. Hard Gates
 
@@ -132,11 +152,11 @@ Full evidence (per-quote table: exact quote, app, date, URL, pain category, freq
 | Company-email requirement (Paid via Atlassian) | UNKNOWN — CHECK PENDING | Atlassian requires a company-domain email for Paid-via-Atlassian apps (personal/generic domains not permitted). User's Gewerbe registration is a separate fact from having a company-domain email; not yet verified. RESEARCH.md A3 |
 | Keyword opportunity | PARTIALLY EVIDENCED | 5 of 22 tested search intents classified PROMISING (or PROMISING-on-visibility); majority (16/22) are WEAK/REJECT/saturated-by-veterans. RESEARCH.md → Phase B1 |
 | Demand validation (3 of 5 narrowed intents) | PARTIALLY EVIDENCED | 3 of 5 Phase B1 intents show real, dated, non-generic customer evidence (production use / regulatory outcomes / multi-year retention) at app level; 2 of 5 (`user access review`, `audit log confluence`) demoted to NEEDS EVIDENCE after app-level scrutiny — low competition alone was not treated as proof of demand. RESEARCH.md → Phase C |
-| Repeated pain | PARTIALLY EVIDENCED | Specific, dated pain found for 2 of 3 Phase C intents (bulk PII-classification gap in GDPR/Confluence; missing field-type support in HubSpot↔Jira sync) — but each is backed by only 1 detailed source, not independently repeated across multiple customers. RESEARCH.md → Phase D |
-| Switching signal | NOT FOUND — explicit "switched from X" / "alternative to X" language absent across all 3 intents (22 statements reviewed); closest signal is comparison-shopping language in the HubSpot intent and switching-from-native-tooling in the analytics intent — both weaker than the CONTEXT.md §7 bar. RESEARCH.md → Phase D | |
-| Clear wedge | UNKNOWN — 2 candidate hypotheses identified, neither yet tested in Phase E | RESEARCH.md → Phase D |
-| Solo feasibility | AT RISK for HubSpot↔Jira hypothesis | HIGH support-trap rating assigned — integration/API apps are structurally prone to customer-specific configuration and third-party API breakage, a direct CONTEXT.md §10 veto concern. RESEARCH.md → Phase D |
-| Support burden | MEDIUM (GDPR bulk-classification hypothesis) / HIGH (HubSpot field-sync hypothesis) | RESEARCH.md → Phase D |
+| Repeated pain | EVIDENCED but not exclusive | Specific, dated pain found for both tested hypotheses, but each pain point is already being actively addressed by existing competitors, not left open. RESEARCH.md → Phase D, Phase E |
+| Switching signal | Reclassified 2026-09-19 using A/B/C/D taxonomy (direct replacement / comparison-shopping / replacement intent / pain only) — see note above Section 1. No type-A competitor-to-competitor replacement found; closest signals are type B (comparison-shopping, HubSpot intent) and type A-against-native-tooling (analytics intent, now on HOLD). RESEARCH.md → Phase D | |
+| **Clear wedge** | **FAIL** | Both candidate hypotheses killed in Phase E: the exact job in each case is already delivered by 3–7 active, funded competitors. RESEARCH.md → Phase E |
+| Solo feasibility | Moot — no surviving wedge to assess | HubSpot↔Jira hypothesis carried a HIGH support-trap rating before being killed on its own terms (job already served). RESEARCH.md → Phase D, Phase E |
+| Support burden | Moot — no surviving wedge to assess | RESEARCH.md → Phase D, Phase E |
 | Native replacement risk | UNKNOWN | |
 | Policy/API risk | UNKNOWN | |
 | Dependency risk | UNKNOWN | |
@@ -208,4 +228,4 @@ Choose exactly one:
 
 **Decision:** `NEEDS EVIDENCE`
 
-**Reason:** Phase A (marketplace screening) and Phase B0 (cold-start validation) are complete — Atlassian Marketplace is selected (see Section 0). Phase B1 (search landscape) is complete — 5 candidate search intents selected (see Section 0.5). Phase C (demand validation) is complete — 3 of those 5 intents carried forward (see Section 0.6). Phase D (pain + switching) is complete — no intent produced explicit switching evidence, but 2 specific pain/wedge hypotheses were identified for further work: bulk PII-classification for GDPR/Confluence (MEDIUM support risk, no switching signal found) and reliable field-type sync for HubSpot↔Jira (strongest comparison-shopping signal found, but HIGH support-trap risk that directly threatens Solo Gate feasibility) — see Section 0.7. No product has been chosen. No BUILD decision may be made until a concrete wedge (Phase E) is established and the HIGH support-trap risk on the HubSpot hypothesis is either resolved or that hypothesis is dropped.
+**Reason:** Phase A (marketplace screening) and Phase B0 (cold-start validation) are complete — Atlassian Marketplace is selected (see Section 0). Phase B1 (search landscape) is complete — 5 candidate search intents selected (see Section 0.5). Phase C (demand validation) is complete — 3 of those 5 intents carried forward (see Section 0.6). Phase D (pain + switching) identified 2 pain/wedge hypotheses (see Section 0.7). Phase E (wedge kill test) is complete — **both hypotheses were killed**: in each case, the exact job is already delivered by 3–7 active, funded competitors, so no defensible wedge exists for either (see Section 0.8). Per AGENTS.md §5, a missing wedge is a veto that is not compensated by the real demand evidence found in Phase C. `confluence page views analytics` is on `HOLD` pending a concrete unmet job. No product has been chosen and none is being pursued on Atlassian Marketplace right now under these 3 intents. This is `NEEDS EVIDENCE` rather than `REJECT` because the marketplace itself (Section 0) remains validated — what failed is these 3 specific intents, not Atlassian as a platform; the next step is sourcing new candidate intents (from Phase B1's WEAK-classified list or fresh keyword research), not abandoning the marketplace.
